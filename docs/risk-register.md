@@ -1,14 +1,11 @@
 # Registro de riesgos — CampusOps
 
-> Registren exactamente tres riesgos y ordénenlos del más al menos prioritario.
-
 | Prioridad | Riesgo | Probabilidad | Impacto | Mitigación | Cómo comprobar la mitigación |
 |---:|---|---|---|---|---|
-| 1 | [riesgo] | [baja/media/alta y motivo] | [bajo/medio/alto y motivo] | [acción] | [evidencia observable] |
-| 2 | [riesgo] | [baja/media/alta y motivo] | [bajo/medio/alto y motivo] | [acción] | [evidencia observable] |
-| 3 | [riesgo] | [baja/media/alta y motivo] | [bajo/medio/alto y motivo] | [acción] | [evidencia observable] |
+| 1 | El equipo trabaja con versiones de Node distintas a la requerida por el proyecto (`.nvmrc` exige 22.13+), lo que puede producir instalaciones que "funcionan" en una máquina pero fallan o se comportan distinto en otra. | Alta: ya ocurrió en el entorno del equipo (Node v20.20.2 instalado por defecto contra el 22.22.0 requerido), por lo que es previsible que otros integrantes tengan el mismo desajuste. | Medio: no bloquea la ejecución local (`make feedback` pasó con warnings), pero puede causar diferencias sutiles de comportamiento entre máquinas o en CI. | Cada integrante ejecuta `nvm install && nvm use` antes de `make setup`, siguiendo el `.nvmrc` del proyecto. | Ejecutar `node -v` en cada máquina del equipo y confirmar que reporta `v22.22.0`; revisar que `make setup` no muestre advertencias `EBADENGINE`. |
+| 2 | Dos integrantes modifican el mismo archivo o la misma incidencia de forma simultánea (análogo al caso de conflicto de reasignación descrito en `CAMPUSOPS.md`), generando pérdida silenciosa de cambios o conflictos de merge no resueltos en Git. | Media: con 3 personas trabajando sobre el mismo repositorio en una ventana de tiempo corta, es razonable que coincidan sobre los mismos archivos, especialmente los JSON de evidencia. | Alto: un conflicto mal resuelto puede sobrescribir trabajo real de un integrante y afectar la trazabilidad exigida en `individual.json`. | Repartir archivos y responsabilidades sin solapamiento antes de empezar (Paso 4 de la guía), y hacer `git pull` antes de cada sesión de trabajo. | Revisar `git log --oneline --graph` y confirmar que no existen commits de "merge conflict resuelto a la fuerza" que descarten cambios de otro autor. |
+| 3 | La dependencia `@xmldom/xmldom` reporta una vulnerabilidad de seguridad moderada (inyección de fragmentos XML), detectada por `npm audit`, que podría propagarse si el proyecto crece e integra procesamiento de XML sin filtrar. | Baja: `audit:ci` solo falla en nivel `critical` y esta vulnerabilidad es `moderate`, además no se usa esta dependencia de forma directa en el código del equipo. | Bajo: no afecta el mínimo de semana 1 y no hay explotación conocida en el flujo actual del proyecto. | Mantener monitoreo del reporte de `npm audit` en cada `make feedback`, y aplicar `npm audit fix` cuando exista una versión corregida sin romper dependencias del starter. | Ejecutar `npm run audit:ci` y confirmar que la vulnerabilidad no escala a nivel `critical`, o que desaparece tras `npm audit fix`. |
 
 ## Riesgo que atenderíamos primero
 
-[Indiquen cuál y justifiquen la decisión.]
-
+Atenderíamos primero el riesgo de la versión de Node (prioridad 1), porque ya se manifestó de forma real en el equipo durante el propio Paso 2 de la guía (`make setup` mostró advertencias `EBADENGINE` con Node v20.20.2) y es la base sobre la que corren todas las demás comprobaciones del proyecto (`typecheck`, `lint`, `test:smoke`, `audit:ci`, `bundle:release`). Si cada integrante no corrige esto antes de empezar su parte, cualquier diagnóstico posterior de la falla controlada podría confundirse con un problema de entorno en lugar de un problema real de código.
