@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 1,
-  "commitSha": "88b5035af6fe72461ef24a1b46d9f3b26314f965",
+  "commitSha": "bee29e336bbc702507e34e8b09033a6cfa80968a",
   "decision": "El equipo decidió usar 'npm run backend:self-test' como comando de diagnóstico y verificación de la falla controlada de idempotencia, en lugar de 'npm run test:smoke', porque el smoke test no ejerce el contrato del backend relacionado con reintentos de operaciones.",
   "alternatives": [
     "Usar 'npm run test:smoke' como único comando de diagnóstico, por ser el que sugiere primero la guía del proyecto y ya formaba parte del flujo de verificación inicial (make feedback).",
