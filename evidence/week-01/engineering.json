@@ -1,20 +1,24 @@
 {
-  "_instructions": "Eliminen este campo cuando terminen. Comparen alternativas reales y relacionen la decisión con una comprobación ejecutada.",
   "schemaVersion": 1,
   "week": 1,
-  "commitSha": "REEMPLAZAR_CON_SHA_DEL_COMMIT_DE_CODIGO_Y_DOCUMENTOS",
-  "decision": "REEMPLAZAR_CON_LA_DECISION_DE_ALCANCE_RIESGO_O_ACEPTACION",
+  "commitSha": "88b5035af6fe72461ef24a1b46d9f3b26314f965",
+  "decision": "El equipo decidió usar 'npm run backend:self-test' como comando de diagnóstico y verificación de la falla controlada de idempotencia, en lugar de 'npm run test:smoke', porque el smoke test no ejerce el contrato del backend relacionado con reintentos de operaciones.",
   "alternatives": [
-    "REEMPLAZAR_CON_PRIMERA_ALTERNATIVA_REAL",
-    "REEMPLAZAR_CON_SEGUNDA_ALTERNATIVA_REAL"
+    "Usar 'npm run test:smoke' como único comando de diagnóstico, por ser el que sugiere primero la guía del proyecto y ya formaba parte del flujo de verificación inicial (make feedback).",
+    "Escribir una prueba nueva dentro de course-tests/ específica para el escenario de idempotencia, en vez de reutilizar course-backend/campusops-self-test.mjs."
   ],
-  "tradeoff": "REEMPLAZAR_CON_EL_BENEFICIO_Y_EL_COSTO_DE_LA_DECISION",
+  "tradeoff": "Beneficio: 'backend:self-test' ejercita directamente los contratos del backend (roles, reasignación, respuesta perdida, idempotencia, evidencia y geocodificación) sin depender de la interfaz ni de Jest, por lo que detecta con precisión la causa real del fallo. Costo: se acepta depender de un script fuera del framework de pruebas principal (Jest), que no se ejecuta automáticamente dentro de 'make feedback' ni de 'test:smoke', por lo que el equipo debe recordar correrlo manualmente durante el diagnóstico.",
   "requirementIds": ["AC-02", "AC-04"],
   "verification": [
     {
-      "command": "REEMPLAZAR_CON_COMANDO_EJECUTADO",
-      "result": "REEMPLAZAR_CON_RESULTADO_OBSERVADO",
-      "evidence": "REEMPLAZAR_CON_ARCHIVO_REPORTE_O_SALIDA_QUE_LO_DEMUESTRA"
+      "command": "npm run backend:self-test",
+      "result": "Con la falla activa (operador de fingerprint invertido a '===' en course-backend/campusops.mjs), el comando terminó con AssertionError: /v1/incidents/campus-inc-001/actions: status, 409 !== 200.",
+      "evidence": "Salida de terminal capturada durante la ejecución del comando; registrada también en reports/week-01/baseline.json bajo el check 'falla-controlada'."
+    },
+    {
+      "command": "npm run backend:self-test",
+      "result": "Tras corregir el operador a '!==', el comando terminó con: 'CampusOps backend contracts: roles, reassignment conflict, lost response, idempotency, evidence and geocoding PASS. Controlled backend self-test passed.'",
+      "evidence": "Salida de terminal capturada tras la corrección; registrada también en reports/week-01/baseline.json bajo el check 'correccion-verificada'."
     }
   ]
 }

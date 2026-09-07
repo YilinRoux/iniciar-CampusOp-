@@ -2,18 +2,23 @@
   "_instructions": "Eliminen este campo cuando terminen. Conserven exactamente tres integrantes y usen SHA Git completos de commits creados por cada persona.",
   "schemaVersion": 1,
   "week": 1,
-  "teamId": "REEMPLAZAR_CON_ID_DEL_EQUIPO",
+  "teamId": "Equipo10",
   "members": [
     {
-      "studentId": "REEMPLAZAR_INTEGRANTE_1",
-      "commitShas": ["REEMPLAZAR_CON_SHA_COMPLETO"],
-      "files": ["REEMPLAZAR_CON_ARCHIVO_TRABAJADO"],
-      "tests": [],
+      "studentId": "3523110152 - Olmos Antonio Diana Laura",
+      "commitShas": ["88b5035af6fe72461ef24a1b46d9f3b26314f965"],
+      "files": [
+        "docs/problem-definition.md",
+        "docs/risk-register.md",
+        "reports/week-01/baseline.json",
+        "evidence/week-01/engineering.json"
+      ],
+      "tests": ["npm run backend:self-test"],
       "reviews": [],
-      "prediction": "REEMPLAZAR_CON_LO_QUE_ESPERABA_OBSERVAR",
-      "command": "REEMPLAZAR_CON_EL_COMANDO_EJECUTADO",
-      "observedResult": "REEMPLAZAR_CON_LO_QUE_OCURRIO",
-      "explanation": "REEMPLAZAR_CON_LA_EXPLICACION_TECNICA"
+      "prediction": "Esperaba que al invertir el operador de comparación de 'fingerprint' (de '!==' a '===') en el bloque de idempotencia de course-backend/campusops.mjs, el reintento de una operación con la misma clave y el mismo contenido fuera rechazado con 409 en vez de aceptarse como duplicado con 200.",
+      "command": "npm run backend:self-test",
+      "observedResult": "Con la falla activa, el comando terminó con AssertionError: /v1/incidents/campus-inc-001/actions: status, 409 !== 200, confirmando la predicción. Tras revertir el operador a '!==', el mismo comando terminó con: 'CampusOps backend contracts: ... PASS. Controlled backend self-test passed.'",
+      "explanation": "El operador invertido hacía que una petición idéntica (mismo contenido, mismo fingerprint) fuera tratada como si tuviera contenido diferente, provocando que el sistema rechazara un reintento legítimo en vez de devolver el resultado ya calculado. Corregir el operador restauró la regla de idempotencia descrita en docs/CAMPUSOPS.md: un reintento con la misma clave y el mismo contenido debe devolver el resultado anterior marcado como duplicado, no un error."
     },
     {
       "studentId": "REEMPLAZAR_INTEGRANTE_2",
