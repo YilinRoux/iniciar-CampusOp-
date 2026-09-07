@@ -21,15 +21,18 @@
       "explanation": "El operador invertido hacía que una petición idéntica (mismo contenido, mismo fingerprint) fuera tratada como si tuviera contenido diferente, provocando que el sistema rechazara un reintento legítimo en vez de devolver el resultado ya calculado. Corregir el operador restauró la regla de idempotencia descrita en docs/CAMPUSOPS.md: un reintento con la misma clave y el mismo contenido debe devolver el resultado anterior marcado como duplicado, no un error."
     },
     {
-      "studentId": "REEMPLAZAR_INTEGRANTE_2",
-      "commitShas": ["REEMPLAZAR_CON_SHA_COMPLETO"],
-      "files": ["REEMPLAZAR_CON_ARCHIVO_TRABAJADO"],
-      "tests": [],
+      "studentId": "3523110441 - Moreno Vasquez Abraham",
+      "commitShas": ["SE_LLENA_DESPUES_EN_EL_PASO_5"],
+      "files": [
+        "course-backend/campusops.mjs",
+        "reports/week-01/baseline.json"
+      ],
+      "tests": ["npm run backend:self-test"],
       "reviews": [],
-      "prediction": "REEMPLAZAR_CON_LO_QUE_ESPERABA_OBSERVAR",
-      "command": "REEMPLAZAR_CON_EL_COMANDO_EJECUTADO",
-      "observedResult": "REEMPLAZAR_CON_LO_QUE_OCURRIO",
-      "explanation": "REEMPLAZAR_CON_LA_EXPLICACION_TECNICA"
+      "prediction": "Esperaba que la prueba terminara sin errores y mostrara que los contratos del backend pasan correctamente, porque la corrección de la falla de idempotencia ya estaba aplicada.",
+      "command": "npm run backend:self-test",
+      "observedResult": "La prueba terminó correctamente y mostró: CampusOps backend contracts: roles, reassignment conflict, lost response, idempotency, evidence and geocoding PASS. Controlled backend self-test passed.",
+      "explanation": "El resultado confirma que la corrección funciona porque la prueba del backend pasó todos los contratos, incluyendo la verificación de idempotencia, sin mostrar ningún AssertionError."
     },
     {
       "studentId": "REEMPLAZAR_INTEGRANTE_3",
