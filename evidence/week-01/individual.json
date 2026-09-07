@@ -22,7 +22,7 @@
     },
     {
       "studentId": "3523110441 - Moreno Vasquez Abraham",
-      "commitShas": ["SE_LLENA_DESPUES_EN_EL_PASO_5"],
+      "commitShas": ["97d358a2534717a22c3ede72d99ccb865beb56b8"],
       "files": [
         "course-backend/campusops.mjs",
         "reports/week-01/baseline.json"
