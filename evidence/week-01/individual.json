@@ -36,7 +36,7 @@
     },
   {
      "studentId": "3522110243 - Josmar Olivera Perez",
-     "commitShas": ["REEMPLAZAR_CON_SHA_REAL_DE_JOSMAR"],
+     "commitShas": ["6ae362f15c74945857c8535ff67eeb515afd87d2"],
      "files": [
      "course-backend/campusops.mjs",
      "reports/week-01/baseline.json"
