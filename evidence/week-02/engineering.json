@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "week": 2,
+  "commitSha": "8a4e9f73cbfd92a7986d576bd0fac17355cb6f43",
+  "decision": "El equipo decidio organizar el codigo de CampusOps en cuatro capas (UI, application, domain, infrastructure), donde la UI recibe el repositorio de incidencias como parametro (inyeccion de dependencias) en lugar de importar la implementacion concreta de infraestructura, para poder sustituir el origen de los datos sin modificar las pantallas.",
+  "alternatives": [
+    "Organizar todo el codigo dentro de los componentes de pantalla (UI monolitica), donde cada pantalla llamaria directamente a la fuente de datos sin pasar por una capa de aplicacion ni un contrato de dominio.",
+    "Usar arquitectura por capas con inyeccion de dependencias, donde la UI solo conoce el contrato del dominio y recibe la implementacion de infraestructura desde un punto de composicion externo."
+  ],
+  "tradeoff": "Beneficio: la UI puede probarse y ejecutarse sin depender de una implementacion concreta de infraestructura, y sustituir el repositorio en memoria por uno real en semanas futuras no requiere tocar las pantallas. Costo: se agregan archivos adicionales (contrato del dominio, casos de uso de aplicacion, punto de composicion) que no serian necesarios si la UI llamara directamente a la fuente de datos, lo cual incrementa la complejidad inicial del proyecto para un alcance tan pequeno como el de esta semana.",
+  "requirementIds": ["AC-02", "AC-03"],
+  "verification": [
+    {
+      "command": "grep -rn \"from.*infrastructure\" src/campusops/ui/",
+      "result": "Antes de la correccion, el comando mostro dos lineas: IncidentDetailScreen.tsx:5 e IncidentListScreen.tsx:5 importando InMemoryIncidentRepository directamente.",
+      "evidence": "Salida de terminal capturada; registrada tambien en reports/week-02/dependencies.json bajo el check 'violacion-ui-infraestructura'."
+    },
+    {
+      "command": "grep -rn \"from.*infrastructure\" src/campusops/ui/",
+      "result": "Despues de la correccion (inyeccion del repositorio como prop y creacion de src/campusops/composition.ts), el comando no devolvio ningun resultado.",
+      "evidence": "Salida de terminal capturada; registrada tambien en reports/week-02/dependencies.json bajo el check 'limite-corregido'."
+    },
+    {
+      "command": "npm run typecheck",
+      "result": "El comando termino sin errores tanto antes como despues de la correccion, confirmando que el cambio de arquitectura no rompio la compilacion del proyecto.",
+      "evidence": "Salida de terminal: tsc --noEmit finalizo sin mensajes de error."
+    }
+  ]
+}

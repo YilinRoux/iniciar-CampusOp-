@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "week": 2,
+  "commitSha": "8a4e9f73cbfd92a7986d576bd0fac17355cb6f43",
+  "generatedAt": "2026-09-13T02:31:50-06:00",
+  "checks": [
+    {
+      "id": "violacion-ui-infraestructura",
+      "status": "fail",
+      "scenarioType": "failure",
+      "command": "grep -rn \"from.*infrastructure\" src/campusops/ui/",
+      "evidence": "Se detecto una violacion del limite de arquitectura: IncidentDetailScreen.tsx:5 e IncidentListScreen.tsx:5 importaban directamente InMemoryIncidentRepository desde infrastructure/inMemoryIncidentRepository, contradiciendo el ADR-001 y el diagrama docs/architecture.mmd, que establecen que la UI solo debe depender de la capa de aplicacion."
+    },
+    {
+      "id": "limite-corregido",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "grep -rn \"from.*infrastructure\" src/campusops/ui/",
+      "evidence": "Tras la correccion, el comando no devuelve ningun resultado. Las pantallas IncidentListScreen e IncidentDetailScreen ahora reciben el repositorio como prop (inyeccion de dependencias) en lugar de importar infraestructura directamente. La instancia real de InMemoryIncidentRepository se crea unicamente en src/campusops/composition.ts, fuera de la capa de UI. Se confirmo ademas que npm run typecheck sigue pasando sin errores tras el cambio."
+    }
+  ]
+}
