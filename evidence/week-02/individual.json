@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "week": 2,
+  "teamId": "Equipo10",
+  "members": [
+    {
+      "studentId": "3523110152 - Olmos Antonio Diana Laura",
+      "commitShas": ["8a4e9f73cbfd92a7986d576bd0fac17355cb6f43"],
+      "files": [
+        "docs/adr/ADR-001-architecture.md",
+        "docs/architecture.mmd",
+        "src/campusops/domain/incident.ts",
+        "src/campusops/application/getIncidents.ts",
+        "src/campusops/application/getIncidentDetail.ts",
+        "src/campusops/infrastructure/inMemoryIncidentRepository.ts",
+        "src/campusops/ui/IncidentListScreen.tsx",
+        "src/campusops/ui/IncidentDetailScreen.tsx",
+        "src/campusops/composition.ts",
+        "reports/week-02/dependencies.json",
+        "evidence/week-02/engineering.json"
+      ],
+      "tests": ["npm run typecheck", "grep -rn \"from.*infrastructure\" src/campusops/ui/"],
+      "reviews": [],
+      "prediction": "Esperaba que al hacer que las pantallas de UI importaran directamente InMemoryIncidentRepository, el comando grep detectara esa violacion del limite UI-infraestructura, y que al corregirla con inyeccion de dependencias el mismo comando dejara de mostrar resultados.",
+      "command": "grep -rn \"from.*infrastructure\" src/campusops/ui/",
+      "observedResult": "Antes de la correccion, el comando mostro dos lineas de violacion (IncidentDetailScreen.tsx e IncidentListScreen.tsx). Despues de inyectar el repositorio como prop y crear src/campusops/composition.ts como unico punto de conexion con infraestructura, el comando no mostro ningun resultado. npm run typecheck siguio pasando sin errores en ambos momentos.",
+      "explanation": "El resultado confirma que la UI dejo de depender directamente de la infraestructura: ahora solo conoce el contrato IncidentRepository definido en el dominio, y recibe la implementacion concreta desde afuera (composition.ts). Esto respeta la decision documentada en ADR-001 y en el diagrama architecture.mmd, permitiendo sustituir el repositorio en memoria por uno real en el futuro sin modificar las pantallas."
+    }
+  ]
+}
