@@ -1,0 +1,34 @@
+flowchart TD
+    subgraph UI["UI (pantallas)"]
+        ListScreen[Lista de incidencias]
+        DetailScreen[Detalle de incidencia]
+    end
+
+    subgraph Application["Application (casos de uso)"]
+        GetIncidents[Caso de uso: obtener lista]
+        GetIncidentDetail[Caso de uso: obtener detalle]
+    end
+
+    subgraph Domain["Domain (modelo y contrato)"]
+        IncidentModel[Modelo Incidencia]
+        IncidentRepositoryContract[Contrato IncidentRepository]
+    end
+
+    subgraph Infrastructure["Infrastructure (implementaciones)"]
+        InMemoryRepo[Repositorio en memoria]
+    end
+
+    ListScreen --> GetIncidents
+    DetailScreen --> GetIncidentDetail
+    GetIncidents --> IncidentRepositoryContract
+    GetIncidentDetail --> IncidentRepositoryContract
+    IncidentRepositoryContract --> IncidentModel
+    InMemoryRepo -.implementa.-> IncidentRepositoryContract
+
+    Session[Sesión y perfiles: reportante, técnico, coordinador]
+    Persistence[Persistencia offline]
+    LocationProvider[Proveedor de ubicación]
+
+    Application -.límite futuro.-> Session
+    Application -.límite futuro.-> Persistence
+    Application -.límite futuro.-> LocationProvider
