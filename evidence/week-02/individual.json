@@ -25,6 +25,17 @@
       "command": "grep -rn \"from.*infrastructure\" src/campusops/ui/",
       "observedResult": "Antes de la correccion, el comando mostro dos lineas de violacion (IncidentDetailScreen.tsx e IncidentListScreen.tsx). Despues de inyectar el repositorio como prop y crear src/campusops/composition.ts como unico punto de conexion con infraestructura, el comando no mostro ningun resultado. npm run typecheck siguio pasando sin errores en ambos momentos.",
       "explanation": "El resultado confirma que la UI dejo de depender directamente de la infraestructura: ahora solo conoce el contrato IncidentRepository definido en el dominio, y recibe la implementacion concreta desde afuera (composition.ts). Esto respeta la decision documentada en ADR-001 y en el diagrama architecture.mmd, permitiendo sustituir el repositorio en memoria por uno real en el futuro sin modificar las pantallas."
+    },
+    {
+      "studentId": "3523110441 - Moreno Vasquez Abraham",
+      "commitShas": ["SE_LLENA_DESPUES_EN_EL_PASO_8"],
+      "files": ["course-tests/architecture/getIncidents.test.ts"],
+      "tests": ["npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/architecture/getIncidents.test.ts"],
+      "reviews": [],
+      "prediction": "Esperaba que la prueba pasara porque getIncidents solo llama al metodo getIncidents() del repositorio que recibe como parametro, sin importar si ese repositorio es InMemoryIncidentRepository o cualquier otro objeto que cumpla el contrato IncidentRepository.",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/architecture/getIncidents.test.ts",
+      "observedResult": "PASS course-tests/architecture/getIncidents.test.ts, con el test 'getIncidents delega en el repositorio inyectado sin conocer su implementacion' pasando correctamente (Tests: 1 passed, 1 total). npm run typecheck termino sin errores tras ajustar el acceso al primer elemento del arreglo con optional chaining, ya que el tsconfig del proyecto tiene activada una regla estricta de indices posiblemente indefinidos.",
+      "explanation": "Esto confirma que getIncidents depende unicamente del contrato IncidentRepository definido en el dominio (src/campusops/domain/incident.ts) y no de una implementacion concreta. Se puede sustituir la infraestructura real por un repositorio falso, en memoria o cualquier otro que cumpla el contrato, sin tocar la logica de aplicacion, tal como establece el ADR-001 y el diagrama architecture.mmd."
     }
   ]
 }
