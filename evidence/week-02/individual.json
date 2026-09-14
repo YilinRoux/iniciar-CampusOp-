@@ -28,7 +28,7 @@
     },
     {
       "studentId": "3523110441 - Moreno Vasquez Abraham",
-      "commitShas": ["SE_LLENA_DESPUES_EN_EL_PASO_8"],
+      "commitShas": ["d6889a47ba409d87e3670e48a26c56efc2f5ce3f"],
       "files": ["course-tests/architecture/getIncidents.test.ts"],
       "tests": ["npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/architecture/getIncidents.test.ts"],
       "reviews": [],
