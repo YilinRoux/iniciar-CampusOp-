@@ -36,6 +36,23 @@
       "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/architecture/getIncidents.test.ts",
       "observedResult": "PASS course-tests/architecture/getIncidents.test.ts, con el test 'getIncidents delega en el repositorio inyectado sin conocer su implementacion' pasando correctamente (Tests: 1 passed, 1 total). npm run typecheck termino sin errores tras ajustar el acceso al primer elemento del arreglo con optional chaining, ya que el tsconfig del proyecto tiene activada una regla estricta de indices posiblemente indefinidos.",
       "explanation": "Esto confirma que getIncidents depende unicamente del contrato IncidentRepository definido en el dominio (src/campusops/domain/incident.ts) y no de una implementacion concreta. Se puede sustituir la infraestructura real por un repositorio falso, en memoria o cualquier otro que cumpla el contrato, sin tocar la logica de aplicacion, tal como establece el ADR-001 y el diagrama architecture.mmd."
+
+    },
+    {
+      "studentId": "3522110243 - Olivera Perez Josmar",
+      "commitShas": ["6ae362f15c74945857c8535ff67eeb515afd87d2"],
+      "files": [
+        "docs/adr/ADR-001-architecture.md",
+        "docs/architecture.mmd"
+      ],
+      "tests": [],
+      "reviews": [
+        "El ADR, el diagrama y el código describen la misma solución arquitectónica: las capas UI, Application, Domain e Infrastructure coinciden y mantienen la dirección de dependencias esperada. Verifiqué además que la UI no importa Infrastructure directamente."
+      ],
+      "prediction": "Esperaba encontrar coherencia entre el ADR, el diagrama y el código, con las mismas cuatro capas y sin dependencias directas de Infrastructure desde la UI.",
+      "command": "cat docs/adr/ADR-001-architecture.md && cat docs/architecture.mmd && grep -rn \"from.*infrastructure\" src/campusops/ui/",
+      "observedResult": "Confirmé que las cuatro capas mencionadas en el ADR coinciden con las carpetas reales de src/campusops/, que el diagrama representa UI hacia Application, Application hacia el contrato de Domain e Infrastructure implementando ese contrato, y que no existen importaciones directas de Infrastructure desde src/campusops/ui/. La importación de Infrastructure encontrada está en composition.ts, fuera de la UI, como punto de composición.",
+      "explanation": "El ADR, el diagrama y el código describen la misma solución. No encontré inconsistencias que requirieran corrección: las cuatro capas coinciden, las dependencias tienen el sentido esperado y la UI no conoce directamente Infrastructure. La importación de Infrastructure en composition.ts es coherente porque corresponde al punto de composición y no a la capa UI."
     }
   ]
 }
