@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "week": 2,
-  "commitSha": "8a4e9f73cbfd92a7986d576bd0fac17355cb6f43",
-  "generatedAt": "2026-09-13T02:31:50-06:00",
+  "commitSha": "3578032798d52f87e610ba37257b7e70bc7ccb7d",
+  "generatedAt": "2026-09-14T22:51:05-06:00",
   "checks": [
     {
       "id": "violacion-ui-infraestructura",
