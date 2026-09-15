@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 2,
-  "commitSha": "3578032798d52f87e610ba37257b7e70bc7ccb7d",
+  "commitSha": "48afb26de11d2df4e0d7360d59b491171090a849",
   "decision": "El equipo decidio organizar el codigo de CampusOps en cuatro capas (UI, application, domain, infrastructure), donde la UI recibe el repositorio de incidencias como parametro (inyeccion de dependencias) en lugar de importar la implementacion concreta de infraestructura, para poder sustituir el origen de los datos sin modificar las pantallas.",
   "alternatives": [
     "Organizar todo el codigo dentro de los componentes de pantalla (UI monolitica), donde cada pantalla llamaria directamente a la fuente de datos sin pasar por una capa de aplicacion ni un contrato de dominio.",
