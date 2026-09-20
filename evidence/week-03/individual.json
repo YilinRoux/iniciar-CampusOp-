@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "week": 3,
+  "teamId": "Equipo10",
+  "members": [
+    {
+      "studentId": "3523110152 - Olmos Antonio Diana Laura",
+      "commitShas": ["6a04dd4270259aa535036ce63ce67a63090f0dc1"],
+      "files": [
+        "docs/threat-model.md",
+        "reports/week-03/security.json",
+        "evidence/week-03/engineering.json",
+        ".github/workflows/week-03-ci-amenazas-feedback.yml"
+      ],
+      "tests": ["make public-test-week-03", "npm run backend:self-test"],
+      "reviews": [],
+      "prediction": "Esperaba que al agregar '|| true' al paso de bundle:release en el workflow, el check workflow_integrity del evaluador y la prueba publica de week-03 detectaran el bypass y fallaran, y que al revertirlo, git diff no mostrara ninguna diferencia contra el estado original.",
+      "command": "make public-test-week-03",
+      "observedResult": "Con el bypass activo, el comando termino con status fail: workflow_integrity reporto bypass markers=['|| true'], y la prueba course-tests/public/week-03.test.ts fallo mostrando el mismo patron. Tras revertir el cambio, git diff del workflow no mostro ninguna diferencia, confirmando que quedo igual al original.",
+      "explanation": "Esto confirma que el proceso de CI no permite ocultar un fallo obligatorio agregando un bypass como '|| true': tanto el evaluador Python como la prueba publica de Jest lo detectan de forma independiente, cumpliendo lo que exige AC-03 sobre demostrar que un incumplimiento no se oculta."
+    },
+    {
+      "studentId": "3523110441 - Moreno Vasquez Abraham",
+      "commitShas": ["SE_LLENA_DESPUES_DE_COMMITEAR"],
+      "files": ["ESCRIBE_AQUI_LOS_ARCHIVOS_QUE_TOCASTE"],
+      "tests": ["ESCRIBE_AQUI_EL_COMANDO_SI_APLICA"],
+      "reviews": [],
+      "prediction": "ESCRIBE_AQUI_QUE_ESPERABAS_ANTES_DE_CORRER_TU_PRUEBA",
+      "command": "ESCRIBE_AQUI_EL_COMANDO_EXACTO",
+      "observedResult": "ESCRIBE_AQUI_EXACTAMENTE_LO_QUE_VISTE",
+      "explanation": "ESCRIBE_AQUI_POR_QUE_ESE_RESULTADO_CONFIRMA_TU_APORTACION"
+    },
+    {
+      "studentId": "3522110243 - Olivera Perez Josmar",
+      "commitShas": ["SE_LLENA_DESPUES_DE_COMMITEAR"],
+      "files": ["ESCRIBE_AQUI_LOS_ARCHIVOS_QUE_TOCASTE"],
+      "tests": [],
+      "reviews": ["ESCRIBE_AQUI_TU_REVISION_DE_2_A_4_LINEAS"],
+      "prediction": "ESCRIBE_AQUI_QUE_ESPERABAS_ENCONTRAR_ANTES_DE_TU_REVISION",
+      "command": "ESCRIBE_AQUI_EL_COMANDO_EXACTO",
+      "observedResult": "ESCRIBE_AQUI_QUE_CONFIRMASTE",
+      "explanation": "ESCRIBE_AQUI_POR_QUE_TU_REVISION_RESPALDA_O_CORRIGE_EL_DOCUMENTO"
+    }
+  ]
+}

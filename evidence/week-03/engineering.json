@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 3,
-  "commitSha": "29bf6dd7e7403c01581d944ba86b45e18aa09a10",
+  "commitSha": "6a04dd4270259aa535036ce63ce67a63090f0dc1",
   "decision": "El equipo decidio priorizar la amenaza 'consultar incidencias ajenas' como la primera a atender, respaldandose en el control ya existente visible() del backend (course-backend/campusops.mjs), que verifica el rol y la relacion del actor con la incidencia antes de mostrarla, en lugar de depender de que la aplicacion movil oculte visualmente los datos no autorizados.",
   "alternatives": [
     "Confiar en que la interfaz movil (UI) simplemente no muestre incidencias ajenas al usuario, sin una verificacion adicional en el backend, asumiendo que el filtrado del lado del cliente es suficiente.",
