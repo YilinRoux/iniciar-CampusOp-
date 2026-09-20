@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "week": 3,
+  "commitSha": "29bf6dd7e7403c01581d944ba86b45e18aa09a10",
+  "generatedAt": "2026-09-20T15:23:59-06:00",
+  "checks": [
+    {
+      "id": "workflow-bypass-detectado",
+      "status": "fail",
+      "scenarioType": "failure",
+      "command": "make public-test-week-03 (con '|| true' agregado temporalmente al paso 'Public Expo Android build' del workflow)",
+      "evidence": "Se agrego temporalmente '|| true' al paso 'run: npm run bundle:release' en .github/workflows/week-03-ci-amenazas-feedback.yml para simular un intento de ocultar un fallo obligatorio. El evaluador detecto la violacion en dos capas distintas: el check 'workflow_integrity' reporto status fail con 'bypass markers=[\"|| true\"]', y la prueba publica course-tests/public/week-03.test.ts fallo en 'feedback workflow preserves critical checks and least privilege', mostrando el patron exacto detectado por el regex /\\|\\|\\s*true|continue-on-error:\\s*true|--passWithNoTests/i. El proceso completo termino con exit code de error (make: *** [Makefile:31: public-test-week-03] Error 1), confirmando que el fallo no se pudo ocultar."
+    },
+    {
+      "id": "workflow-corregido",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "git diff .github/workflows/week-03-ci-amenazas-feedback.yml",
+      "evidence": "Se revirtio el cambio, eliminando '|| true' del paso 'Public Expo Android build'. El comando git diff no mostro ninguna diferencia contra el estado original del workflow, confirmando que quedo exactamente como antes de la falla controlada."
+    },
+    {
+      "id": "control-visibilidad-incidencias",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm run backend:self-test",
+      "evidence": "El comando termino con: 'CampusOps backend contracts: roles, reassignment conflict, lost response, idempotency, evidence and geocoding PASS. Controlled backend self-test passed.' Esto confirma que el control de visibilidad (funcion visible() en course-backend/campusops.mjs), que impide consultar incidencias ajenas, sigue verificado por una prueba automatizada real, tal como se documenta en docs/threat-model.md."
+    }
+  ]
+}

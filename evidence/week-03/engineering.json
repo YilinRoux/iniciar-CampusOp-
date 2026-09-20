@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "week": 3,
+  "commitSha": "29bf6dd7e7403c01581d944ba86b45e18aa09a10",
+  "decision": "El equipo decidio priorizar la amenaza 'consultar incidencias ajenas' como la primera a atender, respaldandose en el control ya existente visible() del backend (course-backend/campusops.mjs), que verifica el rol y la relacion del actor con la incidencia antes de mostrarla, en lugar de depender de que la aplicacion movil oculte visualmente los datos no autorizados.",
+  "alternatives": [
+    "Confiar en que la interfaz movil (UI) simplemente no muestre incidencias ajenas al usuario, sin una verificacion adicional en el backend, asumiendo que el filtrado del lado del cliente es suficiente.",
+    "Verificar la visibilidad de cada incidencia directamente en el backend (funcion visible()), de forma que la restriccion se aplique sin importar si la peticion viene de la app oficial, de otra herramienta, o de una peticion manual a la API."
+  ],
+  "tradeoff": "Beneficio: verificar en el backend protege contra cualquier cliente, incluida una peticion manual a la API que evite la interfaz movil; el control no depende de que la UI se comporte correctamente. Costo: se requiere mantener la logica de visibilidad sincronizada con los roles y relaciones reales de cada incidencia en el backend, lo cual agrega complejidad frente a simplemente ocultar elementos en la UI.",
+  "requirementIds": ["AC-02", "AC-03", "AC-04"],
+  "verification": [
+    {
+      "command": "npm run backend:self-test",
+      "result": "El comando termino con: 'CampusOps backend contracts: roles, reassignment conflict, lost response, idempotency, evidence and geocoding PASS. Controlled backend self-test passed.', confirmando que el caso de prueba que verifica el rechazo con 403 a un reportante ajeno sigue pasando.",
+      "evidence": "Salida de terminal capturada; registrada tambien en reports/week-03/security.json bajo el check 'control-visibilidad-incidencias'."
+    },
+    {
+      "command": "make public-test-week-03 (con bypass '|| true' agregado temporalmente al workflow)",
+      "result": "El evaluador detecto el bypass y reporto status fail en 'workflow_integrity', y la prueba publica tambien fallo, confirmando que un intento de ocultar un fallo obligatorio no pasa desapercibido.",
+      "evidence": "Salida de terminal capturada; registrada tambien en reports/week-03/security.json bajo el check 'workflow-bypass-detectado'."
+    }
+  ]
+}
