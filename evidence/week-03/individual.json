@@ -21,7 +21,7 @@
     },
     {
       "studentId": "3523110441 - Moreno Vasquez Abraham",
-      "commitShas": ["SE_LLENA_DESPUES_EN_EL_PASO_6"],
+      "commitShas": ["84c250dd9b560f2d8360e2a2806f725cff8d009e"],
       "files": ["course-tests/security/assign-authorization.test.mjs"],
       "tests": ["node course-tests/security/assign-authorization.test.mjs"],
       "reviews": [],
