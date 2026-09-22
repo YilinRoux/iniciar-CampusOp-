@@ -32,7 +32,7 @@
     },
     {
       "studentId": "3522110243 - Olivera Perez Josmar",
-      "commitShas": ["SE_LLENA_DESPUES_DE_COMMITEAR"],
+      "commitShas": ["65f74951b6acdd6440805742707e5362f3acf53f"],
       "files": ["docs/threat-model.md", "evidence/week-03/individual.json", ".github/workflows/week-03-ci-amenazas-feedback.yml"],
       "tests": ["npm test -- --ci --runInBand course-tests/public/week-03.test.ts (no ejecutado: Node.js 22.22 no disponible)"],
       "reviews": ["visible() coincide con el control documentado y .gitignore cubre .env y los tipos de firma encontrados.\nEl workflow de Semana 03 estaba ausente y fue reconstruido con los comandos y permisos definidos por el contrato y los workflows existentes.\nLas pruebas disponibles no demuestran mediante GET separado todos los casos positivos descritos por el control; el threat model ahora diferencia implementacion y evidencia.", "El secret_scan existe, pero su alcance es de patrones concretos de credenciales y no cubre automaticamente cualquier dato sensible de negocio."],
