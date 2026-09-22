@@ -32,7 +32,7 @@
     },
     {
       "studentId": "3522110243 - Olivera Perez Josmar",
-      "commitShas": ["SE_LLENA_DESPUES_DE_COMMITEAR"],
+      "commitShas": ["706753fc5b30cc3a1020d2f80b61ab2186463600"],
       "files": [
         "docs/threat-model.md",
         "evidence/week-03/individual.json"
