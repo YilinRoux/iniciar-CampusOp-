@@ -20,7 +20,7 @@
 - **Amenaza:** un actor autenticado (reportante o técnico) intenta consultar una incidencia que no le pertenece ni le fue asignada.
 - **Control:** la función `visible()` en `course-backend/campusops.mjs` verifica que el actor sea coordinador, el reportante original, o el técnico asignado antes de mostrar una incidencia.
 - **Verificación:** la prueba `campusops-self-test.mjs` incluye el caso `await call('/v1/incidents/campus-inc-001', 403, 'reporter-2');`, confirmando que un reportante ajeno recibe `403 forbidden`.
-- **Riesgo residual:** si se agregan nuevos endpoints en el futuro, deben aplicar la misma verificación de visibilidad; no está automatizado a nivel de framework.
+- **Riesgo residual:** si se agregan nuevos endpoints en el futuro, deben aplicar la misma verificación de visibilidad; no está automatizado a nivel de framework. Además, las pruebas disponibles no demuestran mediante solicitudes GET separadas todos los casos positivos descritos por el control (coordinador, reportante original, técnico asignado); solo se confirma el caso de rechazo a un reportante ajeno.
 
 ### 2. Alterar asignaciones sin autorización (prioridad alta)
 
@@ -32,7 +32,7 @@
 ### 3. Filtrar datos sensibles en registros (prioridad media)
 
 - **Amenaza:** los logs del backend o del CI exponen tokens, contraseñas, nombres de reportantes u otra información personal.
-- **Control:** el escaneo de secretos (`secret_scan`) del evaluador revisa todos los archivos del repositorio en busca de patrones de credenciales (claves privadas, tokens de GitHub, claves de AWS, variables `EXPO_PUBLIC_*SECRET*`), excluyendo binarios y `.env.example`.
+- **Control:** el escaneo de secretos (`secret_scan`) del evaluador revisa todos los archivos del repositorio en busca de patrones concretos de credenciales (claves privadas, tokens de GitHub, claves de AWS, variables `EXPO_PUBLIC_*SECRET*`), excluyendo binarios y `.env.example`. Este control no cubre automáticamente cualquier dato sensible de negocio (por ejemplo, nombres de reportantes en texto libre dentro de logs), solo los patrones de credenciales que reconoce.
 - **Verificación:** ejecutar `make verify-week-03` incluye el check `secret_scan`, que debe reportar `hits=[]`.
 - **Riesgo residual:** el escaneo detecta patrones conocidos, no garantiza la ausencia de cualquier dato sensible; el equipo debe seguir revisando manualmente antes de cada commit.
 

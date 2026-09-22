@@ -33,13 +33,20 @@
     {
       "studentId": "3522110243 - Olivera Perez Josmar",
       "commitShas": ["SE_LLENA_DESPUES_DE_COMMITEAR"],
-      "files": ["ESCRIBE_AQUI_LOS_ARCHIVOS_QUE_TOCASTE"],
-      "tests": [],
-      "reviews": ["ESCRIBE_AQUI_TU_REVISION_DE_2_A_4_LINEAS"],
-      "prediction": "ESCRIBE_AQUI_QUE_ESPERABAS_ENCONTRAR_ANTES_DE_TU_REVISION",
-      "command": "ESCRIBE_AQUI_EL_COMANDO_EXACTO",
-      "observedResult": "ESCRIBE_AQUI_QUE_CONFIRMASTE",
-      "explanation": "ESCRIBE_AQUI_POR_QUE_TU_REVISION_RESPALDA_O_CORRIGE_EL_DOCUMENTO"
+      "files": [
+        "docs/threat-model.md",
+        "evidence/week-03/individual.json"
+      ],
+      "tests": [
+        "node -e \"const fs=require('node:fs');const e=JSON.parse(fs.readFileSync('evidence/week-03/individual.json','utf8'));const m=fs.readFileSync('docs/threat-model.md','utf8');if(e.members.length!==3||!m.includes('solo se confirma el caso de rechazo a un reportante ajeno')||!m.includes('Este control no cubre automáticamente cualquier dato sensible de negocio'))process.exit(1);console.log('OK: JSON valido, tres miembros y correcciones del threat model presentes')\""
+      ],
+      "reviews": [
+        "Revise el threat model y confirme que conserva sus activos, fronteras de confianza, cuatro amenazas y verificaciones. La revision detecto que faltaba explicitar la cobertura limitada de las pruebas GET positivas y el alcance de patrones del secret_scan; ambas aclaraciones quedaron incorporadas sin reemplazar el documento."
+      ],
+      "prediction": "Esperaba encontrar un threat model Markdown completo, pero con dos riesgos de interpretacion: la prueba documentada solo demostraba el rechazo a un reportante ajeno y secret_scan podia confundirse con una deteccion general de datos sensibles.",
+      "command": "node -e \"const fs=require('node:fs');const e=JSON.parse(fs.readFileSync('evidence/week-03/individual.json','utf8'));const m=fs.readFileSync('docs/threat-model.md','utf8');if(e.members.length!==3||!m.includes('solo se confirma el caso de rechazo a un reportante ajeno')||!m.includes('Este control no cubre automáticamente cualquier dato sensible de negocio'))process.exit(1);console.log('OK: JSON valido, tres miembros y correcciones del threat model presentes')\"",
+      "observedResult": "El comando termino correctamente e informo: OK: JSON valido, tres miembros y correcciones del threat model presentes. Tambien confirme que el bloque individual declara solo docs/threat-model.md y evidence/week-03/individual.json.",
+      "explanation": "La revision respalda dos correcciones localizadas del documento: explicita que no se probaron todos los casos positivos de visibilidad y limita secret_scan a los patrones de credenciales que reconoce. La evidencia individual registra solo los archivos modificados por mi parte y conserva el SHA pendiente de completar despues del commit real."
     }
   ]
 }
