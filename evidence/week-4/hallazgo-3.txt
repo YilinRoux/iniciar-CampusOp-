@@ -1,0 +1,12 @@
+EVIDENCIA — HALLAZGO 3: AUTENTICACIÓN DEL FIXTURE
+
+Verificación realizada durante la auditoría:
+
+- Se revisó el endpoint `POST /v1/session/login` de
+  `course-backend/campusops.mjs`.
+- El endpoint comprueba que el `actorId` exista.
+- No solicita una contraseña u otra credencial adicional.
+- El archivo identifica este backend como un fixture público de enseñanza
+  y no como autenticación institucional.
+
+Resultado: LIMITACIÓN DOCUMENTADA; NO SE MODIFICÓ.

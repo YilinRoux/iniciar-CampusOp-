@@ -1,0 +1,14 @@
+EVIDENCIA — HALLAZGO 1: TOKENS
+
+Verificación realizada durante la auditoría:
+
+- Se revisó el historial de `course-backend/campusops.mjs` y `course-backend/server.mjs`.
+- Se confirmó que antes del commit final existían valores literales de tokens de demostración.
+- El commit `e949372` sustituyó esos valores por variables de entorno.
+- En el código actual se utilizan:
+  process.env.COURSE_ACCESS_TOKEN
+  process.env.COURSE_REFRESH_TOKEN
+  process.env.COURSE_REFRESH_NEXT_TOKEN
+- `.env.example` contiene los nombres de las variables sin valores de credenciales.
+
+Resultado: CORREGIDO.

@@ -1,0 +1,11 @@
+EVIDENCIA — HALLAZGO 2: CORS
+
+Verificación realizada durante la auditoría:
+
+- Se revisó el historial de `course-backend/server.mjs`.
+- Se confirmó que antes del commit final existía:
+  'access-control-allow-origin': '*',
+- El commit `e949372` sustituyó la configuración abierta.
+- El código actual utiliza `COURSE_BACKEND_ALLOWED_ORIGIN` para definir el origen permitido.
+
+Resultado: CORREGIDO.
