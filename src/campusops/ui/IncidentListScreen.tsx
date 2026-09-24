@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, Text, View } from 'react-native';
-import { Incident, IncidentRepository } from '../domain/incident';
+import { Actor, Incident, IncidentRepository } from '../domain/incident';
 import { getIncidents } from '../application/getIncidents';
 
-export function IncidentListScreen({ repository }: { repository: IncidentRepository }) {
+export function IncidentListScreen({
+  repository,
+  actor,
+}: {
+  repository: IncidentRepository;
+  actor: Actor;
+}) {
   const [incidents, setIncidents] = useState<Incident[]>([]);
 
   useEffect(() => {
-    getIncidents(repository).then(setIncidents);
-  }, [repository]);
+    getIncidents(repository, actor).then(setIncidents);
+  }, [repository, actor]);
 
   return (
     <View>

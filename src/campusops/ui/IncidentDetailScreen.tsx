@@ -1,17 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
-import { Incident, IncidentRepository } from '../domain/incident';
-import { getIncidentDetail } from '../application/getIncidentDetail';
+import { Actor, IncidentRepository } from '../domain/incident';
+import { getIncidentDetail, IncidentDetailResult } from '../application/getIncidentDetail';
 
-export function IncidentDetailScreen({ incidentId, repository }: { incidentId: string; repository: IncidentRepository }) {
-  const [incident, setIncident] = useState<Incident | null>(null);
+export function IncidentDetailScreen({
+  incidentId,
+  repository,
+  actor,
+}: {
+  incidentId: string;
+  repository: IncidentRepository;
+  actor: Actor;
+}) {
+  const [result, setResult] = useState<IncidentDetailResult | null>(null);
 
   useEffect(() => {
-    getIncidentDetail(repository, incidentId).then(setIncident);
-  }, [incidentId, repository]);
+    getIncidentDetail(repository, incidentId, actor).then(setResult);
+  }, [incidentId, repository, actor]);
 
-  if (!incident) return <Text>Cargando...</Text>;
+  if (!result) return <Text>Cargando...</Text>;
 
+  if (result.status === 'forbidden') {
+    return <Text>No tienes permiso para ver esta incidencia.</Text>;
+  }
+
+  if (result.status === 'not_found') {
+    return <Text>Incidencia no encontrada.</Text>;
+  }
+
+  const { incident } = result;
   return (
     <View>
       <Text>{incident.category}</Text>

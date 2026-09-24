@@ -1,5 +1,6 @@
-import { Incident, IncidentRepository } from '../domain/incident';
+import { Actor, Incident, IncidentRepository, isIncidentVisibleToActor } from '../domain/incident';
 
-export async function getIncidents(repository: IncidentRepository): Promise<Incident[]> {
-  return repository.getIncidents();
+export async function getIncidents(repository: IncidentRepository, actor: Actor): Promise<Incident[]> {
+  const incidents = await repository.getIncidents();
+  return incidents.filter((incident) => isIncidentVisibleToActor(incident, actor));
 }

@@ -1,5 +1,5 @@
 import { getIncidents } from '../../src/campusops/application/getIncidents';
-import { Incident, IncidentRepository } from '../../src/campusops/domain/incident';
+import { Actor, Incident, IncidentRepository } from '../../src/campusops/domain/incident';
 
 const fakeRepository: IncidentRepository = {
   async getIncidents(): Promise<Incident[]> {
@@ -9,6 +9,7 @@ const fakeRepository: IncidentRepository = {
       description: 'Fuga de prueba',
       location: 'Zona de prueba',
       status: 'open',
+      reporterId: 'reporter-1',
       assignedTechnicianId: null,
     }];
   },
@@ -17,8 +18,10 @@ const fakeRepository: IncidentRepository = {
   },
 };
 
+const coordinatorActor: Actor = { id: 'coordinator-1', role: 'coordinator' };
+
 test('getIncidents delega en el repositorio inyectado sin conocer su implementacion', async () => {
-  const incidents = await getIncidents(fakeRepository);
+  const incidents = await getIncidents(fakeRepository, coordinatorActor);
   expect(incidents).toHaveLength(1);
   const [incident] = incidents;
   expect(incident?.category).toBe('water');

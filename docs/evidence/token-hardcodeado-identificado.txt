@@ -1,0 +1,9 @@
+course-backend/campusops.mjs:30:    return send(response, 200, { actorId: input.actorId, role: actors[input.actorId], accessToken: 'course-valid-token', refreshToken: 'course-refresh-0', expiresIn: 60 });
+course-backend/campusops.mjs:33:  if (request.headers.authorization !== 'Bearer course-valid-token' || !Object.hasOwn(actors, actorId)) {
+course-backend/README.md:6:- `GET /v1/resources` with `Authorization: Bearer course-valid-token`
+course-backend/server.mjs:46:    if (request.headers.authorization !== 'Bearer course-valid-token') {
+course-backend/server.mjs:61:    return send(response, 200, { accessToken: 'course-valid-token', refreshToken: 'course-refresh-1', expiresIn: 60 });
+course-backend/self-test.mjs:34:    headers: { Authorization: 'Bearer course-valid-token', 'X-Course-Scenario': 'nullable' },
+course-backend/campusops-self-test.mjs:7:      headers: { Authorization: 'Bearer course-valid-token', 'X-Course-Actor': actor,
+course-backend/campusops-self-test.mjs:37:    headers: { Authorization: 'Bearer course-valid-token', 'X-Course-Actor': 'coordinator-1',
+course-backend/campusops-self-test.mjs:65:  const malformed = await fetch(`${baseUrl}/v1/geocoding?q=zona`, { headers: { Authorization: 'Bearer course-valid-token', 'X-Course-Actor': 'reporter-1', 'X-Course-Scenario': 'malformed' } });

@@ -1,0 +1,193 @@
+diff --git a/src/campusops/application/getIncidentDetail.ts b/src/campusops/application/getIncidentDetail.ts
+index 321ddf9..223c59d 100644
+--- a/src/campusops/application/getIncidentDetail.ts
++++ b/src/campusops/application/getIncidentDetail.ts
+@@ -1,5 +1,17 @@
+-import { Incident, IncidentRepository } from '../domain/incident';
++import { Actor, Incident, IncidentRepository, isIncidentVisibleToActor } from '../domain/incident';
+ 
+-export async function getIncidentDetail(repository: IncidentRepository, id: string): Promise<Incident | null> {
+-  return repository.getIncidentById(id);
+-}
++export type IncidentDetailResult =
++  | { status: 'ok'; incident: Incident }
++  | { status: 'not_found' }
++  | { status: 'forbidden' };
++
++export async function getIncidentDetail(
++  repository: IncidentRepository,
++  id: string,
++  actor: Actor,
++): Promise<IncidentDetailResult> {
++  const incident = await repository.getIncidentById(id);
++  if (!incident) return { status: 'not_found' };
++  if (!isIncidentVisibleToActor(incident, actor)) return { status: 'forbidden' };
++  return { status: 'ok', incident };
++}
+\ No newline at end of file
+diff --git a/src/campusops/application/getIncidents.ts b/src/campusops/application/getIncidents.ts
+index 363b685..e571da3 100644
+--- a/src/campusops/application/getIncidents.ts
++++ b/src/campusops/application/getIncidents.ts
+@@ -1,5 +1,6 @@
+-import { Incident, IncidentRepository } from '../domain/incident';
++import { Actor, Incident, IncidentRepository, isIncidentVisibleToActor } from '../domain/incident';
+ 
+-export async function getIncidents(repository: IncidentRepository): Promise<Incident[]> {
+-  return repository.getIncidents();
+-}
++export async function getIncidents(repository: IncidentRepository, actor: Actor): Promise<Incident[]> {
++  const incidents = await repository.getIncidents();
++  return incidents.filter((incident) => isIncidentVisibleToActor(incident, actor));
++}
+\ No newline at end of file
+diff --git a/src/campusops/domain/incident.ts b/src/campusops/domain/incident.ts
+index 13455ec..9a47d85 100644
+--- a/src/campusops/domain/incident.ts
++++ b/src/campusops/domain/incident.ts
+@@ -6,11 +6,28 @@ export interface Incident {
+   description: string;
+   location: string;
+   status: IncidentStatus;
++  reporterId: string;
+   assignedTechnicianId: string | null;
+ }
+ 
++export type ActorRole = 'reporter' | 'technician' | 'coordinator';
++
++export interface Actor {
++  id: string;
++  role: ActorRole;
++}
++
+ // Contrato que la capa de aplicación necesita. La infraestructura lo implementa.
+ export interface IncidentRepository {
+   getIncidents(): Promise<Incident[]>;
+   getIncidentById(id: string): Promise<Incident | null>;
+ }
++
++// Espeja la funcion visible() del backend (course-backend/campusops.mjs):
++// coordinador ve todo, reportante solo lo suyo, tecnico solo lo asignado.
++export function isIncidentVisibleToActor(incident: Incident, actor: Actor): boolean {
++  if (actor.role === 'coordinator') return true;
++  if (actor.role === 'reporter') return incident.reporterId === actor.id;
++  if (actor.role === 'technician') return incident.assignedTechnicianId === actor.id;
++  return false;
++}
+\ No newline at end of file
+diff --git a/src/campusops/infrastructure/inMemoryIncidentRepository.ts b/src/campusops/infrastructure/inMemoryIncidentRepository.ts
+index 9f86438..ab64ca3 100644
+--- a/src/campusops/infrastructure/inMemoryIncidentRepository.ts
++++ b/src/campusops/infrastructure/inMemoryIncidentRepository.ts
+@@ -7,6 +7,7 @@ const fixtureIncidents: Incident[] = [
+     description: 'Sin conexion en laboratorio ficticio',
+     location: 'Edificio de prueba A',
+     status: 'assigned',
++    reporterId: 'reporter-1',
+     assignedTechnicianId: 'technician-1',
+   },
+   {
+@@ -15,6 +16,7 @@ const fixtureIncidents: Incident[] = [
+     description: 'Falla electrica simulada en laboratorio B',
+     location: 'Edificio de prueba B',
+     status: 'open',
++    reporterId: 'reporter-2',
+     assignedTechnicianId: null,
+   },
+ ];
+@@ -27,4 +29,4 @@ export class InMemoryIncidentRepository implements IncidentRepository {
+   async getIncidentById(id: string): Promise<Incident | null> {
+     return fixtureIncidents.find((incident) => incident.id === id) ?? null;
+   }
+-}
++}
+\ No newline at end of file
+diff --git a/src/campusops/ui/IncidentDetailScreen.tsx b/src/campusops/ui/IncidentDetailScreen.tsx
+index 7b9e6f2..729ef39 100644
+--- a/src/campusops/ui/IncidentDetailScreen.tsx
++++ b/src/campusops/ui/IncidentDetailScreen.tsx
+@@ -1,17 +1,34 @@
+ import React, { useEffect, useState } from 'react';
+ import { Text, View } from 'react-native';
+-import { Incident, IncidentRepository } from '../domain/incident';
+-import { getIncidentDetail } from '../application/getIncidentDetail';
++import { Actor, IncidentRepository } from '../domain/incident';
++import { getIncidentDetail, IncidentDetailResult } from '../application/getIncidentDetail';
+ 
+-export function IncidentDetailScreen({ incidentId, repository }: { incidentId: string; repository: IncidentRepository }) {
+-  const [incident, setIncident] = useState<Incident | null>(null);
++export function IncidentDetailScreen({
++  incidentId,
++  repository,
++  actor,
++}: {
++  incidentId: string;
++  repository: IncidentRepository;
++  actor: Actor;
++}) {
++  const [result, setResult] = useState<IncidentDetailResult | null>(null);
+ 
+   useEffect(() => {
+-    getIncidentDetail(repository, incidentId).then(setIncident);
+-  }, [incidentId, repository]);
++    getIncidentDetail(repository, incidentId, actor).then(setResult);
++  }, [incidentId, repository, actor]);
+ 
+-  if (!incident) return <Text>Cargando...</Text>;
++  if (!result) return <Text>Cargando...</Text>;
+ 
++  if (result.status === 'forbidden') {
++    return <Text>No tienes permiso para ver esta incidencia.</Text>;
++  }
++
++  if (result.status === 'not_found') {
++    return <Text>Incidencia no encontrada.</Text>;
++  }
++
++  const { incident } = result;
+   return (
+     <View>
+       <Text>{incident.category}</Text>
+@@ -20,4 +37,4 @@ export function IncidentDetailScreen({ incidentId, repository }: { incidentId: s
+       <Text>{incident.status}</Text>
+     </View>
+   );
+-}
++}
+\ No newline at end of file
+diff --git a/src/campusops/ui/IncidentListScreen.tsx b/src/campusops/ui/IncidentListScreen.tsx
+index 4b88551..de6934d 100644
+--- a/src/campusops/ui/IncidentListScreen.tsx
++++ b/src/campusops/ui/IncidentListScreen.tsx
+@@ -1,14 +1,20 @@
+ import React, { useEffect, useState } from 'react';
+ import { FlatList, Text, View } from 'react-native';
+-import { Incident, IncidentRepository } from '../domain/incident';
++import { Actor, Incident, IncidentRepository } from '../domain/incident';
+ import { getIncidents } from '../application/getIncidents';
+ 
+-export function IncidentListScreen({ repository }: { repository: IncidentRepository }) {
++export function IncidentListScreen({
++  repository,
++  actor,
++}: {
++  repository: IncidentRepository;
++  actor: Actor;
++}) {
+   const [incidents, setIncidents] = useState<Incident[]>([]);
+ 
+   useEffect(() => {
+-    getIncidents(repository).then(setIncidents);
+-  }, [repository]);
++    getIncidents(repository, actor).then(setIncidents);
++  }, [repository, actor]);
+ 
+   return (
+     <View>
+@@ -25,4 +31,4 @@ export function IncidentListScreen({ repository }: { repository: IncidentReposit
+       />
+     </View>
+   );
+-}
++}
+\ No newline at end of file

@@ -7,6 +7,7 @@ const fixtureIncidents: Incident[] = [
     description: 'Sin conexion en laboratorio ficticio',
     location: 'Edificio de prueba A',
     status: 'assigned',
+    reporterId: 'reporter-1',
     assignedTechnicianId: 'technician-1',
   },
   {
@@ -15,6 +16,7 @@ const fixtureIncidents: Incident[] = [
     description: 'Falla electrica simulada en laboratorio B',
     location: 'Edificio de prueba B',
     status: 'open',
+    reporterId: 'reporter-2',
     assignedTechnicianId: null,
   },
 ];

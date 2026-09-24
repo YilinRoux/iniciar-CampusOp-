@@ -1,0 +1,8 @@
+PASS course-tests/architecture/getIncidents.test.ts
+  ✓ getIncidents delega en el repositorio inyectado sin conocer su implementacion (4 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        0.982 s, estimated 2 s
+Ran all test suites matching /course-tests\/architecture\/getIncidents.test.ts/i.
