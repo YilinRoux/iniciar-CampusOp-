@@ -34,7 +34,7 @@
     },
     {
       "studentId": "3523110441 - Moreno Vasquez Abraham",
-      "commitShas": ["PENDIENTE_SHA_COMPLETO_DE_ABRAHAM"],
+      "commitShas": ["bacd26732ed97fd34f5c5d2ee24d9634ce178ce0"],
       "files": ["course-tests/security/error-paths.test.ts"],
       "tests": ["PENDIENTE_COMANDO_DE_ABRAHAM"],
       "reviews": [],
