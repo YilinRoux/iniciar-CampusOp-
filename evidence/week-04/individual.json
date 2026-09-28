@@ -34,14 +34,14 @@
     },
     {
       "studentId": "3523110441 - Moreno Vasquez Abraham",
-      "commitShas": ["PENDIENTE_SHA_COMPLETO_DE_ABRAHAM"],
+      "commitShas": ["bacd26732ed97fd34f5c5d2ee24d9634ce178ce0"],
       "files": ["course-tests/security/error-paths.test.ts"],
-      "tests": ["PENDIENTE_COMANDO_DE_ABRAHAM"],
+            "tests": ["npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/security/error-paths.test.ts"],
       "reviews": [],
-      "prediction": "PENDIENTE_ABRAHAM_ESCRIBE_SU_PREDICCION",
-      "command": "PENDIENTE_ABRAHAM_ESCRIBE_SU_COMANDO",
-      "observedResult": "PENDIENTE_ABRAHAM_ESCRIBE_LO_QUE_OBSERVO",
-      "explanation": "PENDIENTE_ABRAHAM_ESCRIBE_SU_EXPLICACION"
+      "prediction": "Esperaba que las 4 pruebas pasaran a la primera, porque reportError pasa el mensaje por redactText (que enmascara los Bearer) y el contexto por redactSensitive (que recorre listas anidadas y devuelve una copia), y solo arma un JSON con level, message y context, sin la pila del error.",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/security/error-paths.test.ts",
+      "observedResult": "PASS course-tests/security/error-paths.test.ts, Tests: 4 passed, 4 total. npm run typecheck y npm run lint terminaron sin errores despues de correr npm install en Node 22.22.0.",
+      "explanation": "El resultado demuestra que un error real no filtra datos sensibles en el registro: el token de una cabecera Authorization no aparece en la salida, los campos reporterId y photos dentro de listas anidadas quedan enmascarados mientras correlationId se conserva, el registro no incluye la pila del error, y el contexto original no se modifica porque redactSensitive trabaja sobre una copia."
     },
     {
       "studentId": "3522110243 - Olivera Perez Josmar",
