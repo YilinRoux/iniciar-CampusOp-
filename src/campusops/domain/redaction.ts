@@ -25,3 +25,10 @@ export function redactSensitive(input: unknown): unknown {
   }
   return input;
 }
+
+// Enmascara secretos incrustados en texto libre (por ejemplo, mensajes de error).
+export function redactText(text: string): string {
+  return text
+    .replace(/Bearer\s+[A-Za-z0-9._~+/=-]+/gi, `Bearer ${REDACTED}`)
+    .replace(/\b(access_?token|refresh_?token|password|token)=[^&\s]+/gi, `$1=${REDACTED}`);
+}
