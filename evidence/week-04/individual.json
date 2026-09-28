@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "week": 4,
+  "teamId": "Equipo10",
+  "members": [
+    {
+      "studentId": "3523110152 - Olmos Antonio Diana Laura",
+      "commitShas": [
+        "67c0a262667cb550e0fa2715b0746d599b5f52cc",
+        "0487052d2f2b6499b37f64e0b92f319a931c8cbe",
+        "3482d982987a3a30f0181007581571f2ff0da81c",
+        "02aaa54990c545a7c7c7c4bd637b2ac84a0e2c21"
+      ],
+      "files": [
+        "src/campusops/domain/redaction.ts",
+        "src/course-evaluation/index.ts",
+        "src/campusops/application/reportError.ts",
+        "src/campusops/infrastructure/secureSessionStore.ts",
+        "src/campusops/infrastructure/expoSecureStore.ts",
+        "docs/security-controls.md",
+        "course-tests/security/redaction.test.ts",
+        "course-tests/security/sensitive-paths.test.ts"
+      ],
+      "tests": [
+        "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/public/week-04.test.ts course-tests/security/redaction.test.ts course-tests/security/sensitive-paths.test.ts",
+        "make feedback",
+        "python3 tools/course_public_evaluator.py --week 04 --mode verify"
+      ],
+      "reviews": [],
+      "prediction": "Esperaba que la prueba publica de la semana 4 fallara mientras redactForTelemetry siguiera lanzando 'must be implemented', y que pasara al conectarla con una funcion del dominio que copia el objeto y sustituye los campos sensibles por [REDACTED].",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/public/week-04.test.ts course-tests/security/redaction.test.ts course-tests/security/sensitive-paths.test.ts",
+      "observedResult": "Antes de implementar, la prueba publica fallo con 'redactForTelemetry must be implemented in the assigned week'. Despues, las 3 suites pasaron con 7 tests, typecheck y lint sin errores, y make feedback termino en verde tras agregar expo-secure-store.",
+      "explanation": "La prueba fallaba porque el adaptador era un stub; al llamar a redactSensitive se sanitizan objetos y listas anidados sin mutar la entrada. Las pruebas de sensitive-paths muestran que el registro de errores y la sesion no conservan token ni datos personales, y el escaneo de secretos detecta un secreto sintetico y vuelve a pasar al borrarlo."
+    },
+    {
+      "studentId": "3523110441 - Moreno Vasquez Abraham",
+      "commitShas": ["PENDIENTE_SHA_COMPLETO_DE_ABRAHAM"],
+      "files": ["course-tests/security/error-paths.test.ts"],
+      "tests": ["PENDIENTE_COMANDO_DE_ABRAHAM"],
+      "reviews": [],
+      "prediction": "PENDIENTE_ABRAHAM_ESCRIBE_SU_PREDICCION",
+      "command": "PENDIENTE_ABRAHAM_ESCRIBE_SU_COMANDO",
+      "observedResult": "PENDIENTE_ABRAHAM_ESCRIBE_LO_QUE_OBSERVO",
+      "explanation": "PENDIENTE_ABRAHAM_ESCRIBE_SU_EXPLICACION"
+    },
+    {
+      "studentId": "3522110243 - Olivera Perez Josmar",
+      "commitShas": ["PENDIENTE_SHA_COMPLETO_DE_JOSMAR"],
+      "files": ["docs/security-controls.md"],
+      "tests": [],
+      "reviews": ["PENDIENTE_JOSMAR_ESCRIBE_SU_REVISION"],
+      "prediction": "PENDIENTE_JOSMAR_ESCRIBE_SU_PREDICCION",
+      "command": "PENDIENTE_JOSMAR_ESCRIBE_SU_COMANDO",
+      "observedResult": "PENDIENTE_JOSMAR_ESCRIBE_LO_QUE_OBSERVO",
+      "explanation": "PENDIENTE_JOSMAR_ESCRIBE_SU_EXPLICACION"
+    }
+  ]
+}

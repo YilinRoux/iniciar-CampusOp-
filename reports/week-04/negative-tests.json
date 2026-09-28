@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "week": 4,
+  "commitSha": "02aaa54990c545a7c7c7c4bd637b2ac84a0e2c21",
+  "generatedAt": "2026-09-28T01:31:16-06:00",
+  "checks": [
+    {
+      "id": "redact-sin-implementar",
+      "status": "fail",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/public/week-04.test.ts (en el commit 795e52a)",
+      "evidence": "Antes de implementar, la prueba publica fallo con el mensaje 'redactForTelemetry must be implemented in the assigned week' (src/course-evaluation/index.ts): ninguna sanitizacion estaba conectada a la logica de CampusOps. Reproducible con git checkout 795e52a."
+    },
+    {
+      "id": "redact-conectada-contrato-publico",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/public/week-04.test.ts",
+      "evidence": "Con redactSensitive en src/campusops/domain/redaction.ts y redactForTelemetry llamandola, la prueba publica paso: PASS, 1 test. Los campos del contrato quedan como [REDACTED] y incidentId se conserva."
+    },
+    {
+      "id": "anidados-listas-sin-mutar",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/public/week-04.test.ts course-tests/security/redaction.test.ts course-tests/security/sensitive-paths.test.ts",
+      "evidence": "Las 3 suites pasaron, 7 tests en total. redaction.test.ts cubre una lista de objetos anidados con claves access_token y refresh-token, comprueba que la entrada original no cambia (comparacion con una copia previa) y que null, texto y numeros se conservan."
+    },
+    {
+      "id": "errores-y-sesion-sin-filtracion",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/security/sensitive-paths.test.ts",
+      "evidence": "sensitive-paths.test.ts comprueba que el registro de un error con Bearer y con correo en el contexto no contiene ni el token ni el correo pero si conserva el incidentId, que un error que no es Error tambien se sanitiza, y que la sesion guardada en el almacen queda vacia tras clear()."
+    }
+  ]
+}

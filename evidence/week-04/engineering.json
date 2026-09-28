@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "week": 4,
+  "commitSha": "02aaa54990c545a7c7c7c4bd637b2ac84a0e2c21",
+  "decision": "El equipo eligio expo-secure-store como mecanismo de almacenamiento de la sesion, detras del contrato SessionStore del dominio y con el modulo nativo inyectado en el adaptador, y acepta como riesgo residual que aun no hay inicio de sesion que use el almacen y que la redaccion depende de nombres de clave conocidos.",
+  "alternatives": [
+    "Guardar el token en AsyncStorage, que es simple de usar pero lo deja en texto plano en el almacenamiento de la app.",
+    "Mantener la sesion solo en memoria, que no deja rastro en disco pero obliga a iniciar sesion cada vez que se cierra la app.",
+    "Usar expo-secure-store, que guarda en el almacen nativo del sistema (Keychain o Keystore) y ya esta integrado con Expo."
+  ],
+  "tradeoff": "Beneficio: el token no queda en texto plano y el contrato SessionStore permite probar el adaptador con un doble sin codigo nativo. Costo: se agrega una dependencia y un plugin en app.json, el modulo nativo no se ejecuta en Jest, y el almacen no protege un dispositivo comprometido; ademas la redaccion solo cubre las claves del contrato.",
+  "requirementIds": ["AC-02", "AC-03", "AC-04"],
+  "verification": [
+    {
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/public/week-04.test.ts course-tests/security/redaction.test.ts course-tests/security/sensitive-paths.test.ts",
+      "result": "3 suites y 7 tests pasaron: redaccion de anidados y listas, entrada sin modificar, error sin token ni correo y sesion borrada con clear().",
+      "evidence": "reports/week-04/negative-tests.json, checks anidados-listas-sin-mutar y errores-y-sesion-sin-filtracion."
+    },
+    {
+      "command": "rm -rf node_modules && make setup && make feedback",
+      "result": "Tras agregar expo-secure-store, npm ci instalo 973 paquetes desde cero y make feedback termino en verde (typecheck, lint, test:smoke, audit:ci y bundle:release). npm audit sigue reportando 2 vulnerabilidades altas en dependencias de Expo, sin nivel critico.",
+      "evidence": "package.json, package-lock.json y app.json en el commit 3482d98; docs/security-controls.md, seccion Riesgo residual."
+    },
+    {
+      "command": "python3 tools/course_public_evaluator.py --week 04 --mode verify",
+      "result": "secret_scan en pass con hits=[]; con un archivo sintetico temporal reporto fail y volvio a pass al borrarlo.",
+      "evidence": "reports/week-04/secret-scan.json."
+    }
+  ]
+}
