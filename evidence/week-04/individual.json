@@ -45,14 +45,14 @@
     },
     {
       "studentId": "3522110243 - Olivera Perez Josmar",
-      "commitShas": ["PENDIENTE_SHA_COMPLETO_DE_JOSMAR"],
-      "files": ["docs/security-controls.md"],
+      "commitShas": ["063b862578a69e968413fb4e5c23ae4b2dcee3e0"],
+      "files": ["docs/security-controls.md/docs/revision-week04.md"],
       "tests": [],
-      "reviews": ["PENDIENTE_JOSMAR_ESCRIBE_SU_REVISION"],
-      "prediction": "PENDIENTE_JOSMAR_ESCRIBE_SU_PREDICCION",
-      "command": "PENDIENTE_JOSMAR_ESCRIBE_SU_COMANDO",
-      "observedResult": "PENDIENTE_JOSMAR_ESCRIBE_LO_QUE_OBSERVO",
-      "explanation": "PENDIENTE_JOSMAR_ESCRIBE_SU_EXPLICACION"
+      "reviews": ["Comparé security-controls.md y secret-scan.json con el código de CampusOps. La búsqueda no encontró console.* ni AsyncStorage/localStorage en src o App.tsx. También revisé las afirmaciones sobre SessionStore y el alcance del escáner."],
+      "prediction": "Esperaba encontrar que la documentación coincidiera con el código y que no hubiera usos de console.* ni AsyncStorage/localStorage; también esperaba que el reporte de secretos estuviera limpio.",
+      "command": "grep -rn \"console\\.\\(log\\|error\\|warn\\|info\\)\" src App.tsx && grep -rn -i \"AsyncStorage\\|localStorage\" src App.tsx && python3 tools/course_public_evaluator.py --week 04 --mode verify",
+      "observedResult": "Las búsquedas alternativas no encontraron console.* ni AsyncStorage/localStorage en src o App.tsx. El reporte existente registra pass con hits=[], pero no pude repetir el escaneo porque python3 no estaba disponible y el modo verify ejecuta internamente git rev-parse HEAD, por lo que no se ejecutó.",
+      "explanation": "La documentación necesitaba algunas precisiones: reportError y SessionStore existen, pero no están conectados al flujo actual de la aplicación, y el escáner recorre los archivos legibles del árbol del proyecto, no únicamente los archivos versionados. Se actualizaron esas afirmaciones en security-controls.md y se documentó la revisión en revision-week04-josmar.md."
     }
   ]
 }
