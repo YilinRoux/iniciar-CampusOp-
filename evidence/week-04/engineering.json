@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 4,
-  "commitSha": "a5153bb9b3cf1faa3708c6302d22ab8dd5059405",
+  "commitSha": "7bb4ddc5b2baa7862a8e47491ff844db93e37b1b",
   "decision": "El equipo eligio expo-secure-store como mecanismo de almacenamiento de la sesion, detras del contrato SessionStore del dominio y con el modulo nativo inyectado en el adaptador, y acepta como riesgo residual que aun no hay inicio de sesion que use el almacen y que la redaccion depende de nombres de clave conocidos.",
   "alternatives": [
     "Guardar el token en AsyncStorage, que es simple de usar pero lo deja en texto plano en el almacenamiento de la app.",
