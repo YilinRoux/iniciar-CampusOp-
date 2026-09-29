@@ -34,9 +34,15 @@
     },
     {
       "studentId": "3523110441 - Moreno Vasquez Abraham",
-      "commitShas": ["bacd26732ed97fd34f5c5d2ee24d9634ce178ce0"],
-      "files": ["course-tests/security/error-paths.test.ts"],
-            "tests": ["npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/security/error-paths.test.ts"],
+      "commitShas": [
+        "bacd26732ed97fd34f5c5d2ee24d9634ce178ce0"
+      ],
+      "files": [
+        "course-tests/security/error-paths.test.ts"
+      ],
+      "tests": [
+        "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/security/error-paths.test.ts"
+      ],
       "reviews": [],
       "prediction": "Esperaba que las 4 pruebas pasaran a la primera, porque reportError pasa el mensaje por redactText (que enmascara los Bearer) y el contexto por redactSensitive (que recorre listas anidadas y devuelve una copia), y solo arma un JSON con level, message y context, sin la pila del error.",
       "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/security/error-paths.test.ts",
@@ -45,10 +51,17 @@
     },
     {
       "studentId": "3522110243 - Olivera Perez Josmar",
-      "commitShas": ["063b862578a69e968413fb4e5c23ae4b2dcee3e0"],
-      "files": ["docs/security-controls.md/docs/revision-week04.md"],
+      "commitShas": [
+        "063b862578a69e968413fb4e5c23ae4b2dcee3e0"
+      ],
+      "files": [
+        "docs/security-controls.md",
+        "docs/revision-week04.md"
+      ],
       "tests": [],
-      "reviews": ["Comparé security-controls.md y secret-scan.json con el código de CampusOps. La búsqueda no encontró console.* ni AsyncStorage/localStorage en src o App.tsx. También revisé las afirmaciones sobre SessionStore y el alcance del escáner."],
+      "reviews": [
+        "Comparé security-controls.md y secret-scan.json con el código de CampusOps. La búsqueda no encontró console.* ni AsyncStorage/localStorage en src o App.tsx. También revisé las afirmaciones sobre SessionStore y el alcance del escáner."
+      ],
       "prediction": "Esperaba encontrar que la documentación coincidiera con el código y que no hubiera usos de console.* ni AsyncStorage/localStorage; también esperaba que el reporte de secretos estuviera limpio.",
       "command": "grep -rn \"console\\.\\(log\\|error\\|warn\\|info\\)\" src App.tsx && grep -rn -i \"AsyncStorage\\|localStorage\" src App.tsx && python3 tools/course_public_evaluator.py --week 04 --mode verify",
       "observedResult": "Las búsquedas alternativas no encontraron console.* ni AsyncStorage/localStorage en src o App.tsx. El reporte existente registra pass con hits=[], pero no pude repetir el escaneo porque python3 no estaba disponible y el modo verify ejecuta internamente git rev-parse HEAD, por lo que no se ejecutó.",
