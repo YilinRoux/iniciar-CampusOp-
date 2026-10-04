@@ -54,13 +54,16 @@ export class HttpIncidentRepository implements IncidentRepository, IncidentCreat
     }
   }
 
-  async createIncident(input: NewIncident, idempotencyKey: string): Promise<Incident> {
+   async createIncident(input: NewIncident, idempotencyKey: string): Promise<Incident> {
     const body = await this.request('/v1/incidents', {
       method: 'POST',
       body: JSON.stringify(input),
       idempotencyKey,
     });
-    const created = toIncident(body);
+    // El backend envuelve la respuesta: { incident: <sobre>, operationId, duplicate }.
+    const wrapped =
+      typeof body === 'object' && body !== null ? (body as { incident?: unknown }).incident : undefined;
+    const created = toIncident(wrapped);
     if (created === null) throw invalidResponse();
     return created;
   }
