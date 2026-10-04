@@ -1,4 +1,4 @@
-import { Incident, IncidentRepository } from '../domain/incident';
+import { Incident, IncidentCreator, IncidentRepository, NewIncident } from '../domain/incident';
 
 const fixtureIncidents: Incident[] = [
   {
@@ -19,12 +19,23 @@ const fixtureIncidents: Incident[] = [
   },
 ];
 
-export class InMemoryIncidentRepository implements IncidentRepository {
+export class InMemoryIncidentRepository implements IncidentRepository, IncidentCreator {
   async getIncidents(): Promise<Incident[]> {
     return fixtureIncidents;
   }
 
   async getIncidentById(id: string): Promise<Incident | null> {
     return fixtureIncidents.find((incident) => incident.id === id) ?? null;
+  }
+
+  async createIncident(input: NewIncident): Promise<Incident> {
+    const incident: Incident = {
+      id: `campus-inc-${String(fixtureIncidents.length + 1).padStart(3, '0')}`,
+      ...input,
+      status: 'open',
+      assignedTechnicianId: null,
+    };
+    fixtureIncidents.push(incident);
+    return incident;
   }
 }
