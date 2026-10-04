@@ -8,6 +8,7 @@ import type {
 } from './contracts';
 import type { IncidentLocation } from '../campusops/contracts';
 import { redactSensitive } from '../campusops/domain/redaction';
+import { parseRemoteEnvelope } from '../campusops/domain/remoteResource';
 
 function pending(name: string): never {
   throw new Error(`${name} must be implemented in the assigned week`);
@@ -17,8 +18,8 @@ export function redactForTelemetry(input: unknown): unknown {
   return redactSensitive(input);
 }
 
-export function parseRemoteResource(_input: unknown): ParseResult {
-  return pending('parseRemoteResource');
+export function parseRemoteResource(input: unknown): ParseResult {
+  return parseRemoteEnvelope(input);
 }
 
 export function coordinateRefresh(_events: readonly AuthEvent[]): Readonly<{

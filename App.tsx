@@ -3,6 +3,8 @@ import { StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
 import { getBackendHealth } from './src/api/courseBackend';
+import { incidentRepository } from './src/campusops/composition';
+import { IncidentListScreen } from './src/campusops/ui/IncidentListScreen';
 
 export default function App() {
   const [status, setStatus] = useState<'checking' | 'available' | 'offline'>('checking');
@@ -24,6 +26,7 @@ export default function App() {
         <Text>Incidencias del campus · entorno académico ficticio</Text>
         <Text testID="backend-status">Backend: {status}</Text>
       </View>
+      <IncidentListScreen repository={incidentRepository} />
       <StatusBar style="auto" />
     </View>
   );

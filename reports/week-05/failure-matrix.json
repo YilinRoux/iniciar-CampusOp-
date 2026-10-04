@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "week": 5,
+  "commitSha": "cd6876adf7491085f5f3057e50276c362a8c1fc7",
+  "generatedAt": "2026-10-04T23:00:00-06:00",
+  "checks": [
+    {
+      "id": "respuesta-malformada",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --verbose course-tests/contract/httpIncidentRepository.test.ts -t malformed",
+      "evidence": "Un JSON malformado del servidor (X-Course-Scenario=malformed) produce RemoteError con kind invalid_response en lugar de lanzar una excepcion sin controlar o dejar pasar datos corruptos a la UI."
+    },
+    {
+      "id": "timeout",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "CAMPUSOPS_LIVE_BACKEND=http://127.0.0.1:4310 npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --verbose course-tests/contract/backend-scenarios.test.ts -t slow",
+      "evidence": "Con X-Course-Scenario=slow y un limite de espera de 50 ms via AbortController, el cliente aborto la peticion a los 83 ms reales y devolvio RemoteError con kind timeout, sin dejar la promesa colgada indefinidamente."
+    },
+    {
+      "id": "error-500-servidor",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --verbose course-tests/contract/httpIncidentRepository.test.ts -t server_error",
+      "evidence": "Un 500 con cuerpo {\"code\":\"controlled_failure\"} produce RemoteError con kind server_error. El mensaje de error se sanitiza con redactForTelemetry antes de registrarse, sin exponer el cuerpo crudo de la respuesta."
+    },
+    {
+      "id": "rate-limited-429",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --verbose course-tests/contract/httpIncidentRepository.test.ts -t rate_limited",
+      "evidence": "Un 429 con cabecera retry-after produce RemoteError con kind rate_limited y retryAfterMs calculado (1000 ms), distinguible de un error de servidor o uno de red."
+    },
+    {
+      "id": "red-caida",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand --verbose course-tests/contract/httpIncidentRepository.test.ts -t network",
+      "evidence": "Un fetch que rechaza la promesa (conexion caida, sin servidor) produce RemoteError con kind network_error, no una excepcion sin capturar que tumbe la app."
+    }
+  ]
+}
