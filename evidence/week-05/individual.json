@@ -52,7 +52,7 @@
     },
     {
      "studentId": "3522110243 - Olivera Perez Josmar",
-     "commitShas": ["PENDIENTE: SHA completo de un commit propio de Josmar"],
+     "commitShas": ["06d62c8e532274d758239f9fd463bbc374a21aa8"],
      "files": [
       "docs/api-contract.md"
      ],
