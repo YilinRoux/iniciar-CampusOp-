@@ -51,15 +51,19 @@
       "explanation": "Las pruebas demuestran que el cliente HTTP distingue correctamente las respuestas rechazadas: los estados 403 y 422 producen un RemoteError con kind 'rejected' y conservan el status correspondiente. Además, el mensaje del error no expone el cuerpo de la respuesta y utiliza el texto genérico 'Solicitud rechazada'. El caso 404 en getIncidentById se maneja de forma diferente y devuelve null."
     },
     {
-      "studentId": "PENDIENTE: matricula y nombre de Josmar tal como estan registrados",
-      "commitShas": ["PENDIENTE: SHA completo de un commit propio de Josmar"],
-      "files": ["PENDIENTE: archivo tecnico propio"],
-      "tests": ["PENDIENTE: comando de prueba que Josmar ejecuto"],
-      "reviews": [],
-      "prediction": "PENDIENTE: lo escribe Josmar antes de correr su prueba.",
-      "command": "PENDIENTE",
-      "observedResult": "PENDIENTE: salida real que obtuvo Josmar.",
-      "explanation": "PENDIENTE: lo explica Josmar con sus palabras."
-    }
+     "studentId": "3522110243 - Olivera Perez Josmar",
+     "commitShas": ["PENDIENTE: SHA completo de un commit propio de Josmar"],
+     "files": [
+      "docs/api-contract.md"
+     ],
+     "tests": [],
+     "reviews": [
+     "Revisé docs/api-contract.md y lo comparé con la implementación del cliente HTTP, los tipos de error, el parser, el mapper, el contrato de dominio y las pruebas relacionadas. La documentación coincide con el comportamiento real en los puntos revisados, por lo que no fue necesario realizar correcciones."
+     ],
+     "prediction": "Esperaba encontrar posibles diferencias entre la documentación del contrato y el comportamiento real del cliente, principalmente en los tipos de error, el manejo de payload: null, el rechazo de listas con elementos inválidos, la inyección de fetch y el comportamiento de un 404 en el detalle.",
+     "command": "Revisión estática de docs/api-contract.md, src/campusops/domain/remoteError.ts, src/campusops/infrastructure/httpIncidentRepository.ts, src/campusops/infrastructure/incidentMapper.ts, src/campusops/domain/remoteResource.ts, src/campusops/domain/incident.ts y las pruebas de contrato relacionadas.",
+     "observedResult": "La revisión confirmó que los seis tipos de error documentados coinciden con remoteError.ts; payload: null es válido y no se inventan datos; una lista con un elemento inválido provoca el rechazo de la respuesta completa; el cliente recibe fetch mediante inyección y no lo importa directamente; y un 404 en el detalle se representa como null. No se encontraron inconsistencias que requirieran modificar docs/api-contract.md.",
+     "explanation": "Mi aportación consistió en revisar que la documentación del contrato de API coincidiera con el comportamiento real del código. Comparé la documentación con el cliente HTTP, los tipos de error, el parser, el mapper, los contratos de dominio y las pruebas. Como todos los puntos revisados fueron coherentes, no fue necesario modificar el documento."
+     }
   ]
 }
