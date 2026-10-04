@@ -39,32 +39,22 @@
     },
     {
       "studentId": "3523110441 - Moreno Vasquez Abraham",
-      "commitShas": [
-        "PENDIENTE: SHA completo de un commit propio de Abraham"
-      ],
-      "files": [
-        "PENDIENTE: archivo tecnico propio"
-      ],
+      "commitShas": ["a4d3a42a223135a51a213f46b67302d28354ae54"],
+      "files": ["course-tests/contract/rejected-response.test.ts"],
       "tests": [
-        "PENDIENTE: comando de prueba que Abraham ejecuto"
+        "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/contract/rejected-response.test.ts"
       ],
       "reviews": [],
-      "prediction": "PENDIENTE: lo escribe Abraham antes de correr su prueba.",
-      "command": "PENDIENTE",
-      "observedResult": "PENDIENTE: salida real que obtuvo Abraham.",
-      "explanation": "PENDIENTE: lo explica Abraham con sus palabras."
+      "prediction": "Espero que 403 y 422 lancen un `RemoteError` con `kind: 'rejected'` porque cualquier status fuera del rango 200-299 que no sea 429 ni ≥500 cae en `rejected`. También espero que el mensaje sea el texto fijo `'Solicitud rechazada'` y que no incluya el cuerpo de la respuesta. Finalmente, espero que 404 en `getIncidentById` sea la excepción y devuelva `null`.",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/contract/rejected-response.test.ts",
+      "observedResult": "PASS course-tests/contract/rejected-response.test.ts, Tests: 3 passed, 3 total. npm run typecheck y npm run lint sin errores.",
+      "explanation": "Las pruebas demuestran que el cliente HTTP distingue correctamente las respuestas rechazadas: los estados 403 y 422 producen un RemoteError con kind 'rejected' y conservan el status correspondiente. Además, el mensaje del error no expone el cuerpo de la respuesta y utiliza el texto genérico 'Solicitud rechazada'. El caso 404 en getIncidentById se maneja de forma diferente y devuelve null."
     },
     {
       "studentId": "PENDIENTE: matricula y nombre de Josmar tal como estan registrados",
-      "commitShas": [
-        "PENDIENTE: SHA completo de un commit propio de Josmar"
-      ],
-      "files": [
-        "PENDIENTE: archivo tecnico propio"
-      ],
-      "tests": [
-        "PENDIENTE: comando de prueba que Josmar ejecuto"
-      ],
+      "commitShas": ["PENDIENTE: SHA completo de un commit propio de Josmar"],
+      "files": ["PENDIENTE: archivo tecnico propio"],
+      "tests": ["PENDIENTE: comando de prueba que Josmar ejecuto"],
       "reviews": [],
       "prediction": "PENDIENTE: lo escribe Josmar antes de correr su prueba.",
       "command": "PENDIENTE",
