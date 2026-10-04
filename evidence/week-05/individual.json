@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "week": 5,
+  "teamId": "Equipo10",
+  "members": [
+    {
+      "studentId": "3523110152 - Olmos Antonio Diana Laura",
+      "commitShas": [
+        "816fd88b401491a01f012ebe0481126bc31c8b65",
+        "1c707075e2fef25427ed42a8f38ca0ef7c93bc2a",
+        "8598a516f6789a36007906d55411de995151e3d6",
+        "db020eea6e482ffebc88595b56d6108bf5acf0d6",
+        "1e7e11c835153453e1de9df011570e87e917cfd6",
+        "cd6876adf7491085f5f3057e50276c362a8c1fc7"
+      ],
+      "files": [
+        "src/campusops/domain/remoteResource.ts",
+        "src/campusops/domain/remoteError.ts",
+        "src/campusops/infrastructure/incidentMapper.ts",
+        "src/campusops/infrastructure/httpIncidentRepository.ts",
+        "src/campusops/composition.ts",
+        "src/course-evaluation/index.ts",
+        "course-tests/contract/httpIncidentRepository.test.ts",
+        "course-tests/contract/backend-scenarios.test.ts",
+        "docs/api-contract.md"
+      ],
+      "tests": [
+        "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/public/week-05.test.ts",
+        "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/contract/httpIncidentRepository.test.ts",
+        "CAMPUSOPS_LIVE_BACKEND=http://127.0.0.1:4310 npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/contract/backend-scenarios.test.ts",
+        "make feedback",
+        "make verify-week-05"
+      ],
+      "reviews": [],
+      "prediction": "Esperaba que la prueba publica de la semana 5 fallara con 'parseRemoteResource must be implemented in the assigned week' mientras siguiera siendo un stub, y que pasara una vez conectada a una funcion del dominio que valide el sobre {id, version, status, payload}. Tambien esperaba que un payload null se aceptara como valido y que un objeto malformado o con version como texto se rechazara.",
+      "command": "npx jest --no-watchman --cacheDirectory .jest-cache --ci --runInBand course-tests/public/week-05.test.ts course-tests/contract/httpIncidentRepository.test.ts",
+      "observedResult": "La prueba publica de la semana 5 paso con 5 tests despues de conectar parseRemoteResource con parseRemoteEnvelope. Las pruebas de contrato con doble de fetch pasaron con 21 tests. Contra el backend didactico pasaron 7 de 7 variantes, aunque la primera corrida fallo 6 de 7 porque el fetch global de Jest esta simulado. El primer typecheck marco 2 errores en remoteError.ts por exactOptionalPropertyTypes, que se corrigieron declarando number | undefined. make feedback y make verify-week-05 terminaron en verde.",
+      "explanation": "El sobre del servidor se valida en un solo lugar y se convierte al Incident de dominio con un mapeador que descarta los campos internos, por eso la UI nunca ve el formato remoto. Cada falla (JSON malformado, estado invalido, timeout, 500, 429, red caida) se convierte en un RemoteError con un kind distinto, y un payload null valido devuelve null sin inventar datos. La prueba contra el backend mostro que el fallo inicial era del entorno de Jest y no del cliente, y que repetir la creacion con la misma clave devuelve el mismo id."
+    },
+    {
+      "studentId": "3523110441 - Moreno Vasquez Abraham",
+      "commitShas": [
+        "PENDIENTE: SHA completo de un commit propio de Abraham"
+      ],
+      "files": [
+        "PENDIENTE: archivo tecnico propio"
+      ],
+      "tests": [
+        "PENDIENTE: comando de prueba que Abraham ejecuto"
+      ],
+      "reviews": [],
+      "prediction": "PENDIENTE: lo escribe Abraham antes de correr su prueba.",
+      "command": "PENDIENTE",
+      "observedResult": "PENDIENTE: salida real que obtuvo Abraham.",
+      "explanation": "PENDIENTE: lo explica Abraham con sus palabras."
+    },
+    {
+      "studentId": "PENDIENTE: matricula y nombre de Josmar tal como estan registrados",
+      "commitShas": [
+        "PENDIENTE: SHA completo de un commit propio de Josmar"
+      ],
+      "files": [
+        "PENDIENTE: archivo tecnico propio"
+      ],
+      "tests": [
+        "PENDIENTE: comando de prueba que Josmar ejecuto"
+      ],
+      "reviews": [],
+      "prediction": "PENDIENTE: lo escribe Josmar antes de correr su prueba.",
+      "command": "PENDIENTE",
+      "observedResult": "PENDIENTE: salida real que obtuvo Josmar.",
+      "explanation": "PENDIENTE: lo explica Josmar con sus palabras."
+    }
+  ]
+}
