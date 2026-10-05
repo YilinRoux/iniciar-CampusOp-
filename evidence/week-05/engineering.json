@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 5,
-  "commitSha": "cd6876adf7491085f5f3057e50276c362a8c1fc7",
+  "commitSha": "e6d418ce21589d6339f05f0f9a14eca1d98f88b7",
   "decision": "El equipo separa tres capas: el DTO (el sobre { id, version, status, payload } que manda el servidor) se valida con parseRemoteEnvelope en el dominio, un unico mapeador (toIncident) lo convierte en el Incident de dominio y descarta los campos internos, y todo fallo remoto se representa como un RemoteError con un campo kind (invalid_response, timeout, server_error, network_error, rate_limited, rejected). El cliente HttpIncidentRepository recibe fetch por inyeccion, implementa IncidentRepository sin cambiar esa interfaz (crear vive en una interfaz aparte, IncidentCreator) y composition.ts es el unico lugar que elige entre el cliente HTTP y el repositorio en memoria. Un payload null valido se devuelve como null y nunca se convierte en datos inventados ni en error. Se acepta como riesgo residual que las pantallas no muestran un mensaje de error y que no hay reintento automatico.",
   "alternatives": [
     "Usar el DTO directamente en las pantallas y casos de uso, que evita escribir un mapeador pero acopla la interfaz al formato del servidor y deja pasar campos internos como reporterId, notes o history.",
