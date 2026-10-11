@@ -36,14 +36,25 @@
     },
     {
       "studentId": "3523110441 - Moreno Vasquez Abraham",
-      "commitShas": [],
-      "files": [],
-      "tests": [],
-      "reviews": [],
-      "prediction": "",
-      "command": "",
-      "observedResult": "",
-      "explanation": ""
+      "files": [
+        "src/campusops/application/sessionManager.ts",
+        "course-tests/security/session-manager.test.ts"
+      ],
+      "tests": [
+        "npm test -- --ci --runInBand course-tests/security/session-manager.test.ts",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "reviews": [
+        "Revise sessionManager.ts (metodo renew, lineas 119-151): cuando this.flight?.epoch === epoch ya existe, renew() devuelve esa misma promesa en vez de crear una nueva (linea 122), por lo que varias solicitudes concurrentes comparten una sola llamada real a transport.refresh. Lo confirme con la prueba \"tres 401 simultaneos comparten la llamada HTTP de refresh\": transport.refresh fue llamado exactamente 1 vez para 3 solicitudes concurrentes, y las 3 terminaron en status 200.",
+        "Revise el metodo request() (lineas 153-181): la variable local renewed solo se activa una vez; si la respuesta reintentada (retried) sigue en 401, el codigo no vuelve a llamar renew(), sino que ejecuta logout() y lanza unavailable(). Lo confirme con la prueba \"un segundo 401 termina la sesion, sin bucle\": send fue llamado exactamente 2 veces (la original + un solo reintento) y transport.refresh exactamente 1 vez, nunca entra en bucle.",
+        "Revise logout() (lineas 101-113) y el mecanismo de epoch: logout incrementa this.epoch de inmediato y pone this.session y this.flight en null antes de esperar el clear() del storage. Cualquier persist() o renew() en vuelo que compare su epoch capturado contra this.epoch (ahora distinto) lanza unavailable() y no sobrescribe la sesion. Lo confirme con las pruebas \"logout durante refresh rechaza el resultado tardio\" y \"una respuesta de incidencias posterior a logout no llega a la UI\": en ambas, una respuesta que se resuelve despues del logout no revive la sesion ni la UI la recibe.",
+        "Revise como las pruebas usan el reloj controlable: harness() inyecta now: () => time y expone clock(value) para mover el tiempo manualmente. La prueba \"expiracion usa reloj inyectado y renueva una vez para tres solicitudes\" fija time en 60999 (sesion aun valida, sin refresh) y luego en 61000 (sesion expirada segun expiresAt) para disparar el refresh de forma determinista, sin depender de temporizadores reales ni de esperas arbitrarias."
+      ],
+      "prediction": "Antes de ejecutar las pruebas, mi prediccion es que request() detecta un 401 y dispara renew(); si varias solicitudes caen en 401 al mismo tiempo mientras ya hay un refresh en vuelo (this.flight con el mismo epoch), todas deben recibir la misma promesa en lugar de disparar refresh.transport.refresh() por separado, asi que para tres solicitudes concurrentes espero una sola llamada real a transport.refresh. Tambien espero que cada solicitud tenga como maximo un reintento: si despues de renovar la respuesta sigue siendo 401, el codigo no debe volver a intentar renovar, sino cerrar la sesion con logout() y lanzar el error. Sobre logout, espero que incremente epoch y ponga session en null de inmediato, de modo que cualquier persist() o renew() que siga en vuelo con el epoch anterior falle su propia comprobacion (epoch !== this.epoch) y no pueda reactivar la sesion ni sobrescribir el storage despues del clear().",
+      "command": "npm test -- --ci --runInBand course-tests/security/session-manager.test.ts && npm run typecheck && npm run lint",
+      "observedResult": "Las 12 pruebas de course-tests/security/session-manager.test.ts pasaron (Tests: 12 passed, 12 total). npm run typecheck termino sin errores (tsc --noEmit sin salida). npm run lint termino sin errores (eslint . sin salida). No encontre ninguna falla real en el comportamiento de concurrencia ni de logout, por lo que no fue necesario corregir codigo ni pruebas.",
+      "explanation": "Las pruebas demuestran que sessionManager.ts cumple los tres requisitos de esta revision. Primero, la renovacion compartida: renew() usa this.flight para devolver la misma promesa a cualquier solicitud que llegue mientras ya hay un refresh en curso con el mismo epoch, en vez de iniciar un transport.refresh()"
     },
     {
       "studentId": "3522110243 - Olivera Perez Josmar",
