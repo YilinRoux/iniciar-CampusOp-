@@ -1,31 +1,31 @@
-// Punto de composicion: aqui, y solo aqui, se conecta la infraestructura real
-// con la UI a traves del contrato del dominio. La UI nunca importa infraestructura directamente.
 import type { IncidentCreator, IncidentRepository } from './domain/incident';
+import type { IncidentActions } from './domain/incidentActions';
+import { SessionManager } from './application/sessionManager';
 import { HttpIncidentRepository } from './infrastructure/httpIncidentRepository';
-import { InMemoryIncidentRepository } from './infrastructure/inMemoryIncidentRepository';
+import { HttpIncidentActions } from './infrastructure/httpIncidentActions';
+import { HttpSessionTransport, authenticatedFetch } from './infrastructure/httpSessionTransport';
+import { createSessionStore } from './infrastructure/expoSecureStore';
 import { createInMemoryTelemetrySink } from './infrastructure/inMemoryTelemetrySink';
+import type { FetchLike } from './infrastructure/httpIncidentRepository';
 
-// Si EXPO_PUBLIC_CAMPUSOPS_BACKEND_URL esta definida se usa el backend didactico;
-// si no, el repositorio en memoria (pruebas y desarrollo sin servidor).
-// Emulador Android: http://10.0.2.2:4310 | computadora: http://127.0.0.1:4310
-const backendUrl = process.env.EXPO_PUBLIC_CAMPUSOPS_BACKEND_URL;
-const REQUEST_TIMEOUT_MS = 8000;
-
-function buildRepository(): IncidentRepository & IncidentCreator {
-  if (backendUrl === undefined || backendUrl === '') return new InMemoryIncidentRepository();
-  return new HttpIncidentRepository({
-    baseUrl: backendUrl,
-    actorId: 'coordinator-1', // identidad publica de prueba, no un secreto
-    token: 'course-valid-token', // fixture publico del backend didactico
-    fetch: (url, init) => fetch(url, init),
-    timeoutMs: REQUEST_TIMEOUT_MS,
-  });
-}
-
-const repository = buildRepository();
-export const incidentRepository: IncidentRepository = repository;
-export const incidentCreator: IncidentCreator = repository;
-
+// Ambos clientes usan el mismo backend. Android emulado: http://10.0.2.2:4310.
+const baseUrl = process.env.EXPO_PUBLIC_CAMPUSOPS_BACKEND_URL
+  || process.env.EXPO_PUBLIC_COURSE_BACKEND_URL || 'http://127.0.0.1:4310';
+const timeoutMs = 8000;
+const rawFetch: FetchLike = (url, init) => fetch(url, init);
 const telemetry = createInMemoryTelemetrySink();
 export const telemetrySink = telemetry.sink;
 export const telemetryEntries = telemetry.entries;
+
+export const sessionManager = new SessionManager({
+  transport: new HttpSessionTransport({ baseUrl, fetch: rawFetch, timeoutMs }),
+  store: createSessionStore(), now: () => Date.now(), onError: telemetrySink,
+});
+
+const fetchWithSession = authenticatedFetch(sessionManager, rawFetch);
+const repository = new HttpIncidentRepository({
+  baseUrl, actorId: '', token: '', fetch: fetchWithSession, timeoutMs,
+});
+export const incidentRepository: IncidentRepository = repository;
+export const incidentCreator: IncidentCreator = repository;
+export const incidentActions: IncidentActions = new HttpIncidentActions({ baseUrl, fetch: fetchWithSession, timeoutMs });
