@@ -36,6 +36,7 @@
     },
     {
       "studentId": "3523110441 - Moreno Vasquez Abraham",
+      "commitShas": ["fa34c3a2abab8ebe4b244e2753655971ae0ade9e"],
       "files": [
         "src/campusops/application/sessionManager.ts",
         "course-tests/security/session-manager.test.ts"
