@@ -1,0 +1,19 @@
+stateDiagram-v2
+    direction TB
+    [*] --> anonymous
+    anonymous --> logging_in: login o restauracion valida
+    logging_in --> authenticated: respuesta valida y guardado seguro
+    logging_in --> anonymous: loginFailed
+    authenticated --> expired: reloj detecta expiracion al solicitar
+    authenticated --> refreshing: request401
+    expired --> refreshing: solicitud espera renovacion
+    refreshing --> refreshing: otras solicitudes comparten el vuelo
+    refreshing --> authenticated: refreshSucceeded y guardado seguro
+    refreshing --> anonymous: refreshFailed
+    anonymous --> closing: limpiar despues de fallo
+    logging_in --> closing: logout
+    authenticated --> closing: logout o segundo 401
+    expired --> closing: logout
+    refreshing --> closing: logout
+    closing --> closing: borrado fallido o respuesta obsoleta
+    closing --> anonymous: logoutCompleted tras borrar SecureStore

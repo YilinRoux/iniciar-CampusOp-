@@ -9,6 +9,7 @@ import type {
 import type { IncidentLocation } from '../campusops/contracts';
 import { redactSensitive } from '../campusops/domain/redaction';
 import { parseRemoteEnvelope } from '../campusops/domain/remoteResource';
+import { initialSession, transitionSession } from '../campusops/domain/sessionMachine';
 
 function pending(name: string): never {
   throw new Error(`${name} must be implemented in the assigned week`);
@@ -22,14 +23,26 @@ export function parseRemoteResource(input: unknown): ParseResult {
   return parseRemoteEnvelope(input);
 }
 
-export function coordinateRefresh(_events: readonly AuthEvent[]): Readonly<{
+export function coordinateRefresh(events: readonly AuthEvent[]): Readonly<{
   status: 'anonymous' | 'authenticated';
   activeGeneration: number | null;
   refreshCalls: number;
   retriedRequestIds: readonly string[];
   persistedToken: string | null;
 }> {
-  return pending('coordinateRefresh');
+  // El contrato público comienza con una sesión de generación 0 expirada.
+  // La app usará este mismo motor desde initialSession() al hacer login.
+  let current: ReturnType<typeof initialSession> = {
+    ...initialSession(), status: 'expired', activeGeneration: 0, sessionGeneration: 0, nextGeneration: 1,
+  };
+  for (const event of events) current = transitionSession(current, event);
+  return {
+    status: current.activeGeneration === null ? 'anonymous' : 'authenticated',
+    activeGeneration: current.activeGeneration,
+    refreshCalls: current.refreshCalls,
+    retriedRequestIds: current.retriedRequestIds,
+    persistedToken: current.persistedToken,
+  };
 }
 
 export function resolveSync(

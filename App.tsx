@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
 import { getBackendHealth } from './src/api/courseBackend';
-import { incidentRepository } from './src/campusops/composition';
-import { IncidentListScreen } from './src/campusops/ui/IncidentListScreen';
+import { incidentActions, incidentCreator, incidentRepository, sessionManager, telemetrySink } from './src/campusops/composition';
+import { SessionScreen } from './src/campusops/ui/SessionScreen';
 
 export default function App() {
   const [status, setStatus] = useState<'checking' | 'available' | 'offline'>('checking');
@@ -20,20 +20,21 @@ export default function App() {
   }, []);
 
   return (
-    <View style={styles.screen}>
+    <ScrollView contentContainerStyle={styles.screen}>
       <View accessibilityRole="summary" style={styles.card}>
         <Text style={styles.title}>CampusOps</Text>
         <Text>Incidencias del campus · entorno académico ficticio</Text>
         <Text testID="backend-status">Backend: {status}</Text>
       </View>
-      <IncidentListScreen repository={incidentRepository} />
+      <SessionScreen manager={sessionManager} repository={incidentRepository}
+        creator={incidentCreator} actions={incidentActions} onError={telemetrySink} />
       <StatusBar style="auto" />
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, justifyContent: 'center', padding: 24 },
+  screen: { flexGrow: 1, padding: 24 },
   card: { gap: 12, padding: 20 },
   title: { fontSize: 24, fontWeight: '700' },
 });

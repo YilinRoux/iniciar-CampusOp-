@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "week": 6,
+  "teamId": "Equipo10",
+  "members": [
+    {
+      "studentId": "3523110152 - Olmos Antonio Diana Laura",
+      "commitShas": [
+        "8e292fd9c151c6301a14cb2402772604990c8622",
+        "35234ec9ef06cd21abb96566971bc4f8858dfef0"
+      ],
+      "files": [
+        "src/campusops/domain/sessionMachine.ts",
+        "src/campusops/application/sessionManager.ts",
+        "src/campusops/infrastructure/httpSessionTransport.ts",
+        "src/campusops/infrastructure/httpIncidentActions.ts",
+        "src/campusops/ui/SessionScreen.tsx",
+        "src/course-evaluation/index.ts",
+        "docs/session-state-machine.mmd",
+        "course-tests/security/session-manager.test.ts",
+        "course-tests/security/session-backend.test.ts",
+        "course-tests/security/session-screen.test.tsx"
+      ],
+      "tests": [
+        "npm run typecheck",
+        "npm run lint",
+        "npm test -- --ci --runInBand course-tests/security/session-machine.test.ts course-tests/security/session-manager.test.ts course-tests/security/session-backend.test.ts course-tests/security/session-screen.test.tsx course-tests/public/week-06.test.ts",
+        "make feedback",
+        "make verify-week-06"
+      ],
+      "reviews": [],
+      "prediction": "La propiedad que se buscó comprobar fue que varias respuestas 401 compartieran una sola renovación, cada solicitud tuviera como máximo un reintento y el logout impidiera restaurar una sesión mediante respuestas tardías.",
+      "command": "python3 ~/Descargas/generar-evidencias-semana-06.py; make verify-week-06",
+      "observedResult": "El generador ejecutó cinco suites: 27 pruebas aprobadas, sin fallos ni pruebas omitidas. Generó auth-tests.json, concurrency.json y engineering.json para el SHA 35234ec9ef06cd21abb96566971bc4f8858dfef0. make verify-week-06 terminó con status pass. make feedback también completó tipos, lint, smoke, auditoría con umbral crítico y exportación Android. La auditoría siguió reportando vulnerabilidades moderadas y altas.",
+      "explanation": "Integré los estados de sesión, login, renovación compartida, autorización de operaciones y logout. La renovación comparte una promesa y limita los reintentos; las respuestas obsoletas se descartan y las escrituras de almacenamiento se coordinan con el cierre. Las pruebas usan un reloj controlable y verifican permisos mediante el backend didáctico. Utilicé asistencia de IA para preparar código, pruebas y el generador de evidencias; apliqué los cambios y ejecuté las comprobaciones en mi proyecto local."
+    },
+    {
+      "studentId": "3523110441 - Moreno Vasquez Abraham",
+      "commitShas": [],
+      "files": [],
+      "tests": [],
+      "reviews": [],
+      "prediction": "",
+      "command": "",
+      "observedResult": "",
+      "explanation": ""
+    },
+    {
+      "studentId": "3522110243 - Olivera Perez Josmar",
+      "commitShas": [],
+      "files": [],
+      "tests": [],
+      "reviews": [],
+      "prediction": "",
+      "command": "",
+      "observedResult": "",
+      "explanation": ""
+    }
+  ]
+}
