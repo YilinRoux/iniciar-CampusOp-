@@ -59,7 +59,7 @@
     },
     {
       "studentId": "3522110243 - Olivera Perez Josmar",
-      "commitShas": [],
+      "commitShas": ["7a648f65af99773d6a7169fe3461c700f459f6cd"],
       "files": [
         "docs/session-state-machine.mmd",
         "src/campusops/domain/session.ts",
