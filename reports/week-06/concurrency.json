@@ -1,9 +1,16 @@
 {
   "schemaVersion": 1,
   "week": 6,
-  "commitSha": "6720077affd9419b4121ffa5f3155e2617b95883",
-  "generatedAt": "2026-10-13T05:24:21.712456+00:00",
+  "commitSha": "6d3853ec30e525d6bfdab8f13d7676f200b759ea",
+  "generatedAt": "2026-10-13T05:35:03.316182+00:00",
   "checks": [
+    {
+      "id": "coalesces-concurrent-401s-into-one-refresh-and-retries-each-request-once",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --ci --runInBand course-tests/public/week-06.test.ts",
+      "evidence": "Jest aprobó el caso «coalesces concurrent 401s into one refresh and retries each request once» en course-tests/public/week-06.test.ts. El resultado se leyó de la salida JSON de esta ejecución; los asserts del caso conservan la comprobación reproducible."
+    },
     {
       "id": "expiracion-concurrente-renueva-por-http-y-logout-elimina-lo-persistido",
       "status": "pass",
@@ -94,13 +101,6 @@
       "scenarioType": "boundary",
       "command": "npm test -- --ci --runInBand course-tests/security/session-machine.test.ts",
       "evidence": "Jest aprobó el caso «un 401 tardío usa la generación renovada sin otro refresh» en course-tests/security/session-machine.test.ts. El resultado se leyó de la salida JSON de esta ejecución; los asserts del caso conservan la comprobación reproducible."
-    },
-    {
-      "id": "coalesces-concurrent-401s-into-one-refresh-and-retries-each-request-once",
-      "status": "pass",
-      "scenarioType": "boundary",
-      "command": "npm test -- --ci --runInBand course-tests/public/week-06.test.ts",
-      "evidence": "Jest aprobó el caso «coalesces concurrent 401s into one refresh and retries each request once» en course-tests/public/week-06.test.ts. El resultado se leyó de la salida JSON de esta ejecución; los asserts del caso conservan la comprobación reproducible."
     }
   ]
 }

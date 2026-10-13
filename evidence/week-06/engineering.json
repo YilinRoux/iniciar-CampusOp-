@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 6,
-  "commitSha": "6720077affd9419b4121ffa5f3155e2617b95883",
+  "commitSha": "6d3853ec30e525d6bfdab8f13d7676f200b759ea",
   "decision": "Usamos transitionSession como motor compartido por coordinateRefresh y SessionManager. El gestor comparte una promesa de renovación entre solicitudes de la misma sesión, detecta expiración al solicitar con un reloj inyectado y permite como máximo un reintento por solicitud. Una época de sesión invalida login, refresh y respuestas anteriores a logout. Las escrituras seguras se serializan para que el borrado del cierre quede después de un guardado ya iniciado. Si la renovación falla, se pierde la autenticación y se elimina la sesión almacenada; si el borrado falla, se mantiene closing y se informa el error en lugar de declarar un cierre exitoso.",
   "alternatives": [
     "Renovar por separado en cada solicitud que recibe 401: requiere menos coordinación, pero duplica refresh concurrentes y permite carreras de persistencia; no cumple el requisito de una sola renovación compartida.",
