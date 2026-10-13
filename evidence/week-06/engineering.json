@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "week": 6,
+  "commitSha": "6720077affd9419b4121ffa5f3155e2617b95883",
+  "decision": "Usamos transitionSession como motor compartido por coordinateRefresh y SessionManager. El gestor comparte una promesa de renovación entre solicitudes de la misma sesión, detecta expiración al solicitar con un reloj inyectado y permite como máximo un reintento por solicitud. Una época de sesión invalida login, refresh y respuestas anteriores a logout. Las escrituras seguras se serializan para que el borrado del cierre quede después de un guardado ya iniciado. Si la renovación falla, se pierde la autenticación y se elimina la sesión almacenada; si el borrado falla, se mantiene closing y se informa el error en lugar de declarar un cierre exitoso.",
+  "alternatives": [
+    "Renovar por separado en cada solicitud que recibe 401: requiere menos coordinación, pero duplica refresh concurrentes y permite carreras de persistencia; no cumple el requisito de una sola renovación compartida.",
+    "Bloquear todas las solicitudes con un único mutex durante todo el ciclo HTTP: facilita el orden, pero serializa también lecturas independientes y reduce innecesariamente la concurrencia.",
+    "Guardar tokens en almacenamiento general: simplifica acceso y dobles, pero no conserva el almacenamiento seguro de sesión que ya ofrece expo-secure-store."
+  ],
+  "tradeoff": "Se conserva la concurrencia de solicitudes y se evita duplicar renovaciones, a cambio de mantener generaciones, una época de sesión y una cola para escrituras. El reloj detecta expiración al solicitar; no hay renovación periódica en segundo plano. Los tokens y el rol se recuperan de la respuesta validada del backend didáctico, cuyo selector no es autenticación de producción. El fixture público acepta una renovación y rechaza la siguiente, sin modificar ese contrato. Las pruebas de SecureSessionStore usan un doble de la API nativa; el bundle Android no acredita por sí solo una ejecución de Keystore en dispositivo.",
+  "requirementIds": [
+    "AC-01",
+    "AC-02",
+    "AC-03",
+    "AC-04"
+  ],
+  "verification": [
+    {
+      "command": "npm test -- --ci --runInBand course-tests/security/session-machine.test.ts course-tests/security/session-manager.test.ts course-tests/security/session-backend.test.ts course-tests/security/session-screen.test.tsx course-tests/public/week-06.test.ts",
+      "result": "Jest aprobó 27 pruebas en 5 suites; cero fallidas y cero omitidas en esta ejecución. Incluye reloj controlable, 401 simultáneos, máximo un refresh compartido, un reintento por solicitud, logout durante refresh y guardado, respuesta obsoleta, permisos reales del backend y pantallas de los tres perfiles.",
+      "evidence": "reports/week-06/auth-tests.json; reports/week-06/concurrency.json; course-tests/security/session-manager.test.ts; course-tests/security/session-backend.test.ts; course-tests/security/session-screen.test.tsx"
+    }
+  ],
+  "assistance": "Se utilizó asistencia material de ChatGPT/Codex para analizar requisitos, proponer e implementar los parches de sesión y preparar pruebas y este borrador de justificación. La verificación se registra con pruebas ejecutadas contra el código del SHA indicado. El equipo debe revisar la decisión, entender el código y corroborar sus aportaciones individuales antes de entregar."
+}

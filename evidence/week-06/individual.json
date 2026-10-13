@@ -36,7 +36,9 @@
     },
     {
       "studentId": "3523110441 - Moreno Vasquez Abraham",
-      "commitShas": ["fa34c3a2abab8ebe4b244e2753655971ae0ade9e"],
+      "commitShas": [
+        "fa34c3a2abab8ebe4b244e2753655971ae0ade9e"
+      ],
       "files": [
         "src/campusops/application/sessionManager.ts",
         "course-tests/security/session-manager.test.ts"
@@ -59,7 +61,9 @@
     },
     {
       "studentId": "3522110243 - Olivera Perez Josmar",
-      "commitShas": ["7a648f65af99773d6a7169fe3461c700f459f6cd"],
+      "commitShas": [
+        "7a648f65af99773d6a7169fe3461c700f459f6cd"
+      ],
       "files": [
         "docs/session-state-machine.mmd",
         "src/campusops/domain/session.ts",
@@ -93,7 +97,7 @@
       "prediction": "Documentada retrospectivamente tras revisar la implementación; no se registró antes de ejecutar las pruebas. Esperaba que la máquina devolviera a estado no autenticado ante fallo de renovación y que el servidor rechazara con 403 una resolución POST de una incidencia asignada a otro técnico, manteniendo separado el 409 para conflictos de transición. Esta expectativa retrospectiva no es un resultado medido.",
       "command": "Ejecuciones anteriores reportadas, no realizadas en la auditoría estática actual: npx jest --no-watchman --cacheDirectory .jest-cache --runInBand course-tests/public/week-06.test.ts course-tests/security/session-machine.test.ts course-tests/security/session-manager.test.ts course-tests/security/session-backend.test.ts; npm run typecheck; npm run lint. También se intentó python -c para validar el JSON (python no disponible), node -e para validar el JSON (falló por sintaxis de comillas) y se validó mediante PowerShell: Get-Content -Raw evidence\\week-06\\individual.json | ConvertFrom-Json con comprobaciones de estructura.",
       "observedResult": "Resultados de la ejecución anterior reportada: Jest terminó con 4 suites y 24 pruebas aprobadas, sin fallos ni snapshots; typecheck y lint terminaron con código 0. En la auditoría estática actual no se ejecutaron comandos ni pruebas. El intento anterior con python no se ejecutó porque el comando no estaba disponible; node -e falló por sintaxis de comillas, no por el JSON. La validación PowerShell anterior pasó: JSON válido, 3 integrantes, studentId conservado, commitShas vacío y campos de Josmar completos. No se reportan resultados nuevos en esta revisión.",
-      "explanation": "La inspección estática respalda que los fallos de refresh limpian la sesión, logout invalida operaciones anteriores y borra el almacenamiento, y el backend rechaza con 403 a un técnico no asignado; coordinación puede cerrar/reabrir y los conflictos de transición usan 409. La prueba POST directa aparece en session-backend.test.ts. Los resultados automatizados citados proceden de la ejecución anterior reportada y no se volvieron a ejecutar en la auditoría estática. La asistencia de IA se declara para la preparación anterior de la prueba y documentación; no afirmo autoría personal exclusiva del cambio. No añadí un SHA: commitShas se conserva exactamente vacío y no se usó Git."
+      "explanation": "La inspección estática respalda que los fallos de refresh limpian la sesión, logout invalida operaciones anteriores y borra el almacenamiento, y el backend rechaza con 403 a un técnico no asignado; coordinación puede cerrar/reabrir y los conflictos de transición usan 409. La prueba POST directa aparece en session-backend.test.ts. Los resultados automatizados citados proceden de la ejecución anterior reportada y no se volvieron a ejecutar en la auditoría estática. La asistencia de IA se declara para la preparación anterior de la prueba y documentación; no afirmo autoría personal exclusiva del cambio. Posteriormente se incorporó a commitShas el SHA del commit 7a648f65af99773d6a7169fe3461c700f459f6cd que registra esta revisión."
     }
   ]
 }

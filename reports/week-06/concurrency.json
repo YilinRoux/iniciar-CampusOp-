@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "week": 6,
+  "commitSha": "6720077affd9419b4121ffa5f3155e2617b95883",
+  "generatedAt": "2026-10-13T05:24:21.712456+00:00",
+  "checks": [
+    {
+      "id": "expiracion-concurrente-renueva-por-http-y-logout-elimina-lo-persistido",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --ci --runInBand course-tests/security/session-backend.test.ts",
+      "evidence": "Jest aprobó el caso «expiración concurrente renueva por HTTP y logout elimina lo persistido» en course-tests/security/session-backend.test.ts. El resultado se leyó de la salida JSON de esta ejecución; los asserts del caso conservan la comprobación reproducible."
+    },
+    {
+      "id": "el-fixture-rechaza-un-segundo-refresh-y-la-app-vuelve-a-no-autenticado",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand course-tests/security/session-backend.test.ts",
+      "evidence": "Jest aprobó el caso «el fixture rechaza un segundo refresh y la app vuelve a no autenticado» en course-tests/security/session-backend.test.ts. El resultado se leyó de la salida JSON de esta ejecución; los asserts del caso conservan la comprobación reproducible."
+    },
+    {
+      "id": "tres-401-simultaneos-comparten-la-llamada-http-de-refresh",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --ci --runInBand course-tests/security/session-manager.test.ts",
+      "evidence": "Jest aprobó el caso «tres 401 simultáneos comparten la llamada HTTP de refresh» en course-tests/security/session-manager.test.ts. El resultado se leyó de la salida JSON de esta ejecución; los asserts del caso conservan la comprobación reproducible."
+    },
+    {
+      "id": "un-segundo-401-termina-la-sesion-sin-bucle",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand course-tests/security/session-manager.test.ts",
+      "evidence": "Jest aprobó el caso «un segundo 401 termina la sesión, sin bucle» en course-tests/security/session-manager.test.ts. El resultado se leyó de la salida JSON de esta ejecución; los asserts del caso conservan la comprobación reproducible."
+    },
+    {
+      "id": "renovacion-fallida-borra-tokens-sin-exponer-el-error-remoto-en-logs",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand course-tests/security/session-manager.test.ts",
+      "evidence": "Jest aprobó el caso «renovación fallida borra tokens sin exponer el error remoto en logs» en course-tests/security/session-manager.test.ts. El resultado se leyó de la salida JSON de esta ejecución; los asserts del caso conservan la comprobación reproducible."
+    },
+    {
+      "id": "logout-durante-refresh-rechaza-el-resultado-tardio",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand course-tests/security/session-manager.test.ts",
+      "evidence": "Jest aprobó el caso «logout durante refresh rechaza el resultado tardío» en course-tests/security/session-manager.test.ts. El resultado se leyó de la salida JSON de esta ejecución; los asserts del caso conservan la comprobación reproducible."
+    },
+    {
+      "id": "un-refresh-antiguo-no-reemplaza-un-nuevo-login",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --ci --runInBand course-tests/security/session-manager.test.ts",
+      "evidence": "Jest aprobó el caso «un refresh antiguo no reemplaza un nuevo login» en course-tests/security/session-manager.test.ts. El resultado se leyó de la salida JSON de esta ejecución; los asserts del caso conservan la comprobación reproducible."
+    },
+    {
+      "id": "logout-espera-un-save-iniciado-y-borra-despues",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --ci --runInBand course-tests/security/session-manager.test.ts",
+      "evidence": "Jest aprobó el caso «logout espera un save iniciado y borra después» en course-tests/security/session-manager.test.ts. El resultado se leyó de la salida JSON de esta ejecución; los asserts del caso conservan la comprobación reproducible."
+    },
+    {
+      "id": "401-repetidos-comparten-renovacion-y-no-duplican-solicitudes",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --ci --runInBand course-tests/security/session-machine.test.ts",
+      "evidence": "Jest aprobó el caso «401 repetidos comparten renovación y no duplican solicitudes» en course-tests/security/session-machine.test.ts. El resultado se leyó de la salida JSON de esta ejecución; los asserts del caso conservan la comprobación reproducible."
+    },
+    {
+      "id": "fallo-de-renovacion-borra-el-token-y-rechaza-un-exito-tardio",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand course-tests/security/session-machine.test.ts",
+      "evidence": "Jest aprobó el caso «fallo de renovación borra el token y rechaza un éxito tardío» en course-tests/security/session-machine.test.ts. El resultado se leyó de la salida JSON de esta ejecución; los asserts del caso conservan la comprobación reproducible."
+    },
+    {
+      "id": "logout-durante-refresh-impide-que-su-respuesta-restaure-la-sesion",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --ci --runInBand course-tests/security/session-machine.test.ts",
+      "evidence": "Jest aprobó el caso «logout durante refresh impide que su respuesta restaure la sesión» en course-tests/security/session-machine.test.ts. El resultado se leyó de la salida JSON de esta ejecución; los asserts del caso conservan la comprobación reproducible."
+    },
+    {
+      "id": "un-segundo-401-de-la-misma-solicitud-no-inicia-otro-refresh",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand course-tests/security/session-machine.test.ts",
+      "evidence": "Jest aprobó el caso «un segundo 401 de la misma solicitud no inicia otro refresh» en course-tests/security/session-machine.test.ts. El resultado se leyó de la salida JSON de esta ejecución; los asserts del caso conservan la comprobación reproducible."
+    },
+    {
+      "id": "un-401-tardio-usa-la-generacion-renovada-sin-otro-refresh",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --ci --runInBand course-tests/security/session-machine.test.ts",
+      "evidence": "Jest aprobó el caso «un 401 tardío usa la generación renovada sin otro refresh» en course-tests/security/session-machine.test.ts. El resultado se leyó de la salida JSON de esta ejecución; los asserts del caso conservan la comprobación reproducible."
+    },
+    {
+      "id": "coalesces-concurrent-401s-into-one-refresh-and-retries-each-request-once",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --ci --runInBand course-tests/public/week-06.test.ts",
+      "evidence": "Jest aprobó el caso «coalesces concurrent 401s into one refresh and retries each request once» en course-tests/public/week-06.test.ts. El resultado se leyó de la salida JSON de esta ejecución; los asserts del caso conservan la comprobación reproducible."
+    }
+  ]
+}
