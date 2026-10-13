@@ -83,6 +83,22 @@ test('los perfiles se autentican y el servidor restringe sus operaciones', async
   expect(coordinator.manager.view().role).toBe('coordinator');
   expect(await otherTechnician.repository.getIncidents()).toEqual([]);
   await expect(otherTechnician.actions.perform('campus-inc-001', 'start')).rejects.toMatchObject({ status: 403 });
+  const otherTechnicianSession = await otherTechnician.transport.login('technician-2');
+  const directResolve = await nodeFetch(`${baseUrl}/v1/incidents/campus-inc-001/actions`, {
+    method: 'POST',
+    signal: new AbortController().signal,
+    headers: {
+      Authorization: `Bearer ${otherTechnicianSession.accessToken}`,
+      'X-Course-Actor': 'technician-2',
+      'Content-Type': 'application/json',
+      'Idempotency-Key': 'week06-unassigned-resolve',
+    },
+    body: JSON.stringify({
+      action: 'resolve', baseVersion: 1, diagnosis: 'Diagnostico ficticio no autorizado',
+    }),
+  });
+  expect(directResolve.status).toBe(403);
+  expect(await directResolve.text()).toContain('forbidden');
   await expect(reporter.actions.perform('campus-inc-001', 'resolve', 'Prueba')).rejects.toMatchObject({ status: 403 });
   await expect(coordinator.actions.perform('campus-inc-001', 'start')).rejects.toMatchObject({ status: 403 });
   await expect(coordinator.actions.perform('campus-inc-001', 'close')).rejects.toMatchObject({ status: 409 });

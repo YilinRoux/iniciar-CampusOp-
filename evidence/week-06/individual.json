@@ -59,14 +59,41 @@
     },
     {
       "studentId": "3522110243 - Olivera Perez Josmar",
-      "commitShas": [],
-      "files": [],
-      "tests": [],
-      "reviews": [],
-      "prediction": "",
-      "command": "",
-      "observedResult": "",
-      "explanation": ""
+      "commitShas": ["7a648f65af99773d6a7169fe3461c700f459f6cd"],
+      "files": [
+        "docs/session-state-machine.mmd",
+        "src/campusops/domain/session.ts",
+        "src/campusops/domain/sessionMachine.ts",
+        "src/campusops/application/sessionManager.ts",
+        "src/campusops/infrastructure/secureSessionStore.ts",
+        "course-backend/campusops.mjs",
+        "course-backend/server.mjs",
+        "src/campusops/infrastructure/httpIncidentActions.ts",
+        "src/campusops/domain/incidentActions.ts",
+        "src/campusops/ui/SessionScreen.tsx",
+        "course-tests/security/session-machine.test.ts",
+        "course-tests/security/session-manager.test.ts",
+        "course-tests/security/session-backend.test.ts",
+        "course-tests/public/week-06.test.ts",
+        "src/course-evaluation/index.ts",
+        "src/course-evaluation/contracts.ts"
+      ],
+      "tests": [
+        "Ejecución anterior reportada, no repetida en la auditoría estática actual: npx jest --no-watchman --cacheDirectory .jest-cache --runInBand course-tests/public/week-06.test.ts course-tests/security/session-machine.test.ts course-tests/security/session-manager.test.ts course-tests/security/session-backend.test.ts — 4 suites y 24 pruebas aprobadas.",
+        "Ejecución anterior reportada, no repetida en la auditoría estática actual: npm run typecheck — aprobado (tsc --noEmit, código de salida 0).",
+        "Ejecución anterior reportada, no repetida en la auditoría estática actual: npm run lint — aprobado (eslint ., código de salida 0)."
+      ],
+      "reviews": [
+        "Revisión estática: comparé docs/session-state-machine.mmd con transitionSession y SessionManager. El inicio, expiración, renovación, fallo, logout y descarte de respuestas obsoletas corresponden al código; logout completa el borrado del almacén antes de logoutCompleted.",
+        "Revisión estática: SessionManager comparte la promesa de refresh por epoch, limita el reintento y valida la epoch antes de persistir la respuesta. session-manager.test.ts contiene casos de reloj controlado, fallo, token no expuesto en logs, refresh obsoleto y logout.",
+        "Revisión estática: course-backend/campusops.mjs exige rol técnico y asignación visible para start/resolve, y coordinación para close/reopen. La prueba distingue autorización 403 de conflicto de transición 409. La petición POST directa para resolver como technician-2 está presente en session-backend.test.ts; el resultado 403 forbidden corresponde a la ejecución anterior reportada, no a esta revisión estática.",
+        "Revisión estática: los controles en SessionScreen solo presentan acciones por perfil; la autorización efectiva ocurre en el backend. Los actores y credenciales sintéticos son fixtures didácticos, no autenticación de producción.",
+        "Declaración de asistencia: se utilizó asistencia de IA en una fase anterior para preparar la prueba POST directa y documentación relacionada. No atribuyo exclusivamente a Josmar la autoría material de ese cambio; la prueba se revisó y su resultado de ejecución se registra como previo."
+      ],
+      "prediction": "Documentada retrospectivamente tras revisar la implementación; no se registró antes de ejecutar las pruebas. Esperaba que la máquina devolviera a estado no autenticado ante fallo de renovación y que el servidor rechazara con 403 una resolución POST de una incidencia asignada a otro técnico, manteniendo separado el 409 para conflictos de transición. Esta expectativa retrospectiva no es un resultado medido.",
+      "command": "Ejecuciones anteriores reportadas, no realizadas en la auditoría estática actual: npx jest --no-watchman --cacheDirectory .jest-cache --runInBand course-tests/public/week-06.test.ts course-tests/security/session-machine.test.ts course-tests/security/session-manager.test.ts course-tests/security/session-backend.test.ts; npm run typecheck; npm run lint. También se intentó python -c para validar el JSON (python no disponible), node -e para validar el JSON (falló por sintaxis de comillas) y se validó mediante PowerShell: Get-Content -Raw evidence\\week-06\\individual.json | ConvertFrom-Json con comprobaciones de estructura.",
+      "observedResult": "Resultados de la ejecución anterior reportada: Jest terminó con 4 suites y 24 pruebas aprobadas, sin fallos ni snapshots; typecheck y lint terminaron con código 0. En la auditoría estática actual no se ejecutaron comandos ni pruebas. El intento anterior con python no se ejecutó porque el comando no estaba disponible; node -e falló por sintaxis de comillas, no por el JSON. La validación PowerShell anterior pasó: JSON válido, 3 integrantes, studentId conservado, commitShas vacío y campos de Josmar completos. No se reportan resultados nuevos en esta revisión.",
+      "explanation": "La inspección estática respalda que los fallos de refresh limpian la sesión, logout invalida operaciones anteriores y borra el almacenamiento, y el backend rechaza con 403 a un técnico no asignado; coordinación puede cerrar/reabrir y los conflictos de transición usan 409. La prueba POST directa aparece en session-backend.test.ts. Los resultados automatizados citados proceden de la ejecución anterior reportada y no se volvieron a ejecutar en la auditoría estática. La asistencia de IA se declara para la preparación anterior de la prueba y documentación; no afirmo autoría personal exclusiva del cambio. No añadí un SHA: commitShas se conserva exactamente vacío y no se usó Git."
     }
   ]
 }
