@@ -2,6 +2,7 @@ export type IncidentStatus = 'open' | 'assigned' | 'in_progress' | 'resolved' | 
 
 export interface Incident {
   id: string;
+  version?: number;
   category: string;
   description: string;
   location: string;
