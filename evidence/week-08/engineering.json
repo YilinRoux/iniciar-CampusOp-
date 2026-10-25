@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "week": 8,
+  "commitSha": "88bce754c30ea7b67260dd96b228d9362c2647d3",
+  "decision": "Se utiliza SQLite para conservar incidencias y operaciones pendientes con una identidad estable. Cada operación registra su autor, versión base y contenido. La sincronización deduplica operaciones, utiliza Idempotency-Key y retira de la cola únicamente las confirmadas. Cuando el servidor devuelve 409 por una reasignación concurrente, la intención local se conserva y se diagnostica el conflicto mediante resolveSync, sin imponer la asignación anterior sobre el servidor.",
+  "alternatives": [
+    "Mantener operaciones únicamente en memoria: simplifica la implementación, pero pierde cambios al cerrar la aplicación.",
+    "Sobrescribir siempre el servidor con el estado local: evita intervención manual, pero puede eliminar una reasignación válida.",
+    "Descartar automáticamente operaciones rechazadas con 409: simplifica la cola, pero pierde la intención del técnico."
+  ],
+  "tradeoff": "La persistencia y la conservación de conflictos evitan pérdida silenciosa, a cambio de mantener operaciones pendientes que pueden requerir resolución explícita. La deduplicación y la identidad estable permiten reintentos sin aplicar dos veces el efecto. Las pruebas actuales verifican el esquema SQLite equivalente y las funciones públicas de sincronización; todavía falta comprobar el reinicio real de la aplicación y la migración directa de expo-sqlite.",
+  "requirementIds": [
+    "AC-01",
+    "AC-02",
+    "AC-03",
+    "AC-04"
+  ],
+  "verification": [
+    {
+      "command": "node scripts/week-08/test-migration.cjs",
+      "result": "Cinco comprobaciones aprobadas: conservación inicial, rollback, reapertura, recuperación e idempotencia del esquema.",
+      "evidence": "scripts/week-08/test-migration.cjs; reports/week-08/migration-tests.json"
+    },
+    {
+      "command": "npm test -- --ci --runInBand course-tests/public/week-08.test.ts",
+      "result": "Una suite y tres pruebas aprobadas: conflicto por reasignación, combinación y deduplicación.",
+      "evidence": "course-tests/public/week-08.test.ts; reports/week-08/migration-tests.json"
+    },
+    {
+      "command": "npm run backend:self-test",
+      "result": "Backend self-test aprobado: roles, conflicto de reasignación, respuesta perdida e idempotencia.",
+      "evidence": "course-backend/self-test.mjs"
+    },
+    {
+      "command": "npm test -- --ci --runInBand course-tests/integration/week-08-sqlite.test.ts course-tests/integration/week-08-offline.test.ts course-tests/public/week-08.test.ts",
+      "result": "Tres suites y nueve pruebas aprobadas: persistencia de SqliteIncidentStore con adaptador Node SQLite, cola simulada y contratos públicos de sincronización.",
+      "evidence": "course-tests/integration/week-08-sqlite.test.ts; course-tests/integration/week-08-offline.test.ts; course-tests/public/week-08.test.ts"
+    }
+  ],
+  "assistance": "Se utilizó asistencia de ChatGPT para analizar requisitos, preparar código y redactar documentación y evidencias. Las comprobaciones indicadas fueron ejecutadas en el entorno local del proyecto. La evidencia individual de los demás integrantes debe corresponder a sus propias aportaciones."
+}
