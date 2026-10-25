@@ -2,6 +2,10 @@ import type { IncidentCreator, IncidentRepository } from './domain/incident';
 import type { IncidentActions } from './domain/incidentActions';
 import { SessionManager } from './application/sessionManager';
 import { HttpIncidentRepository } from './infrastructure/httpIncidentRepository';
+import { CachedIncidentRepository } from './infrastructure/cachedIncidentRepository';
+import { SqliteIncidentStore } from './infrastructure/sqliteIncidentStore';
+import { HttpSyncTransport } from './infrastructure/httpSyncTransport';
+import { OfflineIncidentActions } from './application/offlineIncidentActions';
 import { HttpIncidentActions } from './infrastructure/httpIncidentActions';
 import { HttpSessionTransport, authenticatedFetch } from './infrastructure/httpSessionTransport';
 import { createSessionStore } from './infrastructure/expoSecureStore';
@@ -26,6 +30,44 @@ const fetchWithSession = authenticatedFetch(sessionManager, rawFetch);
 const repository = new HttpIncidentRepository({
   baseUrl, actorId: '', token: '', fetch: fetchWithSession, timeoutMs,
 });
-export const incidentRepository: IncidentRepository = repository;
+const incidentStore = SqliteIncidentStore.open();
+
+export const incidentRepository: IncidentRepository =
+  new CachedIncidentRepository(repository, incidentStore);
+
 export const incidentCreator: IncidentCreator = repository;
-export const incidentActions: IncidentActions = new HttpIncidentActions({ baseUrl, fetch: fetchWithSession, timeoutMs });
+const remoteActions = new HttpIncidentActions({
+  baseUrl, fetch: fetchWithSession, timeoutMs,
+});
+
+const syncTransport = new HttpSyncTransport({
+  baseUrl, fetch: fetchWithSession, timeoutMs,
+});
+
+const offlineActions = new OfflineIncidentActions(
+  remoteActions,
+  sessionManager,
+  incidentStore,
+  syncTransport,
+);
+
+export const incidentActions: IncidentActions = offlineActions;
+
+let lastSynchronizedActor: string | null = null;
+
+sessionManager.subscribe(() => {
+  const session = sessionManager.view();
+
+  if (session.status !== 'authenticated' || session.role !== 'technician') {
+    lastSynchronizedActor = null;
+    return;
+  }
+
+  if (session.actorId === lastSynchronizedActor) return;
+
+  lastSynchronizedActor = session.actorId;
+
+  void offlineActions.synchronize().catch((error: unknown) => {
+    telemetrySink(error instanceof Error ? error.message : String(error));
+  });
+});

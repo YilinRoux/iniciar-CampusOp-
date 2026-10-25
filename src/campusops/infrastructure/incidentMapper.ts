@@ -9,7 +9,7 @@ const invalid = () => new RemoteError('invalid_response', 'Respuesta remota inva
 export function toIncident(raw: unknown): Incident | null {
   const parsed = parseRemoteEnvelope(raw);
   if (!parsed.ok) throw invalid();
-  const { id, status, payload } = parsed.value;
+  const { id, version, status, payload } = parsed.value;
   if (payload === null) return null;
 
   const { category, description, location } = payload;
@@ -21,5 +21,5 @@ export function toIncident(raw: unknown): Incident | null {
   ) {
     throw invalid();
   }
-  return { id, category, description, location, status: status as IncidentStatus, assignedTechnicianId: technician };
+  return { id, version, category, description, location, status: status as IncidentStatus, assignedTechnicianId: technician };
 }
