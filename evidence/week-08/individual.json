@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "week": 8,
+  "teamId": "Equipo10",
+  "members": [
+    {
+      "studentId": "3523110152 - Olmos Antonio Diana Laura",
+      "commitShas": [
+        "88bce754c30ea7b67260dd96b228d9362c2647d3",
+        "3350a5af0cf2a3c4279b853a1bade6c7534ca160"
+      ],
+      "files": [
+        "src/campusops/infrastructure/sqliteIncidentStore.ts",
+        "src/campusops/application/incidentSync.ts",
+        "src/campusops/application/offlineIncidentActions.ts",
+        "course-tests/integration/week-08-sqlite.test.ts",
+        "course-tests/integration/week-08-offline.test.ts",
+        "reports/week-08/migration-tests.json",
+        "evidence/week-08/engineering.json"
+      ],
+      "tests": [
+        "npm run typecheck",
+        "npm run lint",
+        "npm test -- --ci --runInBand course-tests/integration/week-08-sqlite.test.ts course-tests/integration/week-08-offline.test.ts course-tests/public/week-08.test.ts"
+      ],
+      "reviews": [],
+      "prediction": "La persistencia local debe conservar incidencias y operaciones después de reabrir SQLite; la sincronización debe conservar conflictos y eliminar únicamente operaciones confirmadas.",
+      "command": "npm test -- --ci --runInBand course-tests/integration/week-08-sqlite.test.ts course-tests/integration/week-08-offline.test.ts course-tests/public/week-08.test.ts",
+      "observedResult": "3 suites y 9 pruebas aprobadas; TypeScript y ESLint sin errores.",
+      "explanation": "Se verificó la clase SqliteIncidentStore mediante un adaptador Node SQLite y la lógica de sincronización offline mediante pruebas automatizadas. No sustituye pruebas en dispositivo móvil."
+    },
+    {
+      "studentId": "3523110441 - Moreno Vasquez Abraham",
+      "commitShas": [],
+      "files": [],
+      "tests": [],
+      "reviews": [],
+      "prediction": "",
+      "command": "",
+      "observedResult": "",
+      "explanation": ""
+    },
+    {
+      "studentId": "3522110243 - Olivera Perez Josmar",
+      "commitShas": [],
+      "files": [],
+      "tests": [],
+      "reviews": [],
+      "prediction": "",
+      "command": "",
+      "observedResult": "",
+      "explanation": ""
+    }
+  ]
+}
