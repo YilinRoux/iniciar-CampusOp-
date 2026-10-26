@@ -31,14 +31,22 @@
     },
     {
       "studentId": "3523110441 - Moreno Vasquez Abraham",
-      "commitShas": [],
-      "files": [],
-      "tests": [],
-      "reviews": [],
-      "prediction": "",
-      "command": "",
-      "observedResult": "",
-      "explanation": ""
+      "commitShas": ["fa48cc060e2cb02d36b6d805743bec8ddf6ea4d7"],
+      "files": ["course-tests/integration/week-08-retry-abraham.test.ts"],
+      "tests": [
+        "npm run typecheck",
+        "npm run lint",
+        "npm test -- --ci --runInBand course-tests/integration/week-08-retry-abraham.test.ts course-tests/integration/week-08-offline.test.ts course-tests/public/week-08.test.ts"
+      ],
+      "reviews": [
+        "Revise synchronizePendingOperations en src/campusops/application/incidentSync.ts (lineas 49-87): el catch generico mantiene la operacion en pending sin eliminarla del store, y solo la marca ademas como conflicto cuando error instanceof RemoteError y error.status === 409. Escribi A1 con un transporte que lanza RemoteError(network_error) en el primer intento y no lanza nada en el segundo: confirme que tras el primer intento la operacion sigue en store.operations y en result.pending, y que tras el segundo intento pasa a result.confirmed y store.operations queda vacio, conservando el mismo operationId en ambos resultados.",
+        "Escribi A2 para comprobar especificamente un RemoteError de servidor (kind server_error, status 500), que no es 409: confirme que el primer intento deja la operacion en pending con conflicts vacio (no se marca como conflicto, solo un 409 lo haria), y que un segundo intento exitoso la mueve a confirmed y la retira del store.",
+        "Escribi A3 para el aislamiento por actor: con dos operaciones en el store, una de technician-1 y otra de technician-2, llame synchronizePendingOperations con actorId technician-1. Confirme que transport.send solo se invoco con la operacion de technician-1 (la del otro actor nunca se envia), que result.confirmed solo contiene la propia, y que result.pending y store.operations conservan unicamente la operacion de technician-2 sin tocarla."
+      ],
+      "prediction": "Antes de escribir las pruebas, mi prediccion basada en el codigo de synchronizePendingOperations era que cualquier error en transport.send (de red o un RemoteError de servidor) deja la operacion en pending sin eliminarla del store, y que solo un RemoteError con status 409 se agrega ademas a conflicts; un error 500 no deberia aparecer en conflicts porque la condicion compara explicitamente status === 409. Tambien esperaba que el filtro por actorId (operation.actorId !== actorId) hiciera que una operacion de otro tecnico nunca llegue a transport.send y quede en pending sin que el store la modifique.",
+      "command": "npm run typecheck && npm run lint && npm test -- --ci --runInBand course-tests/integration/week-08-retry-abraham.test.ts course-tests/integration/week-08-offline.test.ts course-tests/public/week-08.test.ts",
+      "observedResult": "Con Node 22.22.0, typecheck (tsc --noEmit) y lint (eslint .) terminaron sin errores. Las 3 suites pasaron con 10 pruebas en total (3 propias mas 7 de las otras dos suites), sin fallos. En A1 y A2 el primer intento dejo la operacion en pending y el segundo la confirmo, conservando siempre el mismo operationId; en A2 confirme ademas que conflicts quedo vacio porque el error era 500, no 409. En A3 transport.send se llamo exactamente una vez, solo con la operacion de technician-1; la operacion de technician-2 permanecio en pending y en store.operations sin modificarse. Nota: una primera corrida del lint con Node 20 fallo en week-08-sqlite.test.ts (archivo de Diana) porque node:sqlite solo existe en Node 22; al cambiar a Node 22 el lint paso limpio sin modificar ese archivo.",
+      "explanation": "Las tres pruebas demuestran que synchronizePendingOperations cumple los requisitos de reintentos de esta semana usando la funcion real, sin mocks del modulo completo. A1 y A2 confirman que la operacion nunca se pierde ante un fallo de envio (de red o HTTP 500): el catch generico la mantiene en pending y solo la retira del store cuando send() resuelve sin lanzar error, lo que corresponde directamente a las lineas 72-83 de incidentSync.ts. A2 ademas verifica que el criterio de conflicto es especifico a 409 (linea 80), por lo que un 500 pendiente no se confunde con un conflicto de reasignacion. A3 confirma el aislamiento por actorId (linea 67): la funcion filtra antes de intentar enviar, asi que la cola de un tecnico nunca se mezcla con la de otro durante la sincronizacion, lo cual es relevante para el caso de concurrencia que describe la actividad (reasignacion mientras otro tecnico trabaja sin conexion)."
     },
     {
       "studentId": "3522110243 - Olivera Perez Josmar",
