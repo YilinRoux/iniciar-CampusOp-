@@ -27,7 +27,7 @@
     },
     {
       "studentId": "3522110243 - Olivera Perez Josmar",
-      "commitShas": [],
+      "commitShas": ["d4f5b1ad03b77542bc05982bef23d8651b4cd59a"],
       "files": [
         "course-tests/integration/week-08-validation-.test.ts"
       ],
