@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "week": 8,
+  "commitSha": "",
+  "decision": "Pendiente: el equipo debe registrar una decision de sincronizacion basada en la implementacion integrada y aprobada; no se infiere una decision compartida a partir del auxiliar local.",
+  "alternatives": [],
+  "tradeoff": "Pendiente: documentar el beneficio y el costo de las alternativas realmente evaluadas por el equipo.",
+  "requirementIds": [],
+  "verification": [
+    {
+      "command": "npm test -- --ci --runInBand course-tests/integration/week-08-validation-.test.ts",
+      "result": "Jest aprobo 1 suite y 8 pruebas, con 0 fallidas.",
+      "evidence": "course-tests/integration/week-08-validation-.test.ts; casos J1, J2, J3 y encolado valido."
+    },
+    {
+      "command": "npm run typecheck",
+      "result": "Aprobado; tsc --noEmit termino con codigo 0.",
+      "evidence": "Ejecucion actual de npm run typecheck."
+    },
+    {
+      "command": "npm run lint",
+      "result": "Aprobado; eslint . termino con codigo 0.",
+      "evidence": "Ejecucion actual de npm run lint."
+    }
+  ]
+}

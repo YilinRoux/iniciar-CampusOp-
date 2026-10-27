@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "week": 8,
+  "teamId": "Equipo10",
+  "members": [
+    {
+      "studentId": "3523110152 - Olmos Antonio Diana Laura",
+      "commitShas": [],
+      "files": [],
+      "tests": [],
+      "reviews": [],
+      "prediction": "Pendiente de completar por la integrante con una expectativa registrada antes de la verificacion.",
+      "command": "Pendiente de registrar por la integrante.",
+      "observedResult": "Pendiente de registrar con resultados reales de Semana 8.",
+      "explanation": "Pendiente de documentar la contribucion individual de Semana 8; no se atribuyen archivos, pruebas ni resultados sin evidencia."
+    },
+    {
+      "studentId": "3523110441 - Moreno Vasquez Abraham",
+      "commitShas": [],
+      "files": [],
+      "tests": [],
+      "reviews": [],
+      "prediction": "Pendiente de completar por el integrante con una expectativa registrada antes de la verificacion.",
+      "command": "Pendiente de registrar por el integrante.",
+      "observedResult": "Pendiente de registrar con resultados reales de Semana 8.",
+      "explanation": "Pendiente de documentar la contribucion individual de Semana 8; no se atribuyen archivos, pruebas ni resultados sin evidencia."
+    },
+    {
+      "studentId": "3522110243 - Olivera Perez Josmar",
+      "commitShas": [],
+      "files": [
+        "course-tests/integration/week-08-validation-.test.ts"
+      ],
+      "tests": [
+        "npm test -- --ci --runInBand course-tests/integration/week-08-validation-.test.ts",
+        "npm run typecheck",
+        "npm run lint"
+      ],
+      "reviews": [],
+      "prediction": "La verificacion debe confirmar que J1, J2 y J3 rechacen con su causa especifica sin invocar enqueue, y que una entrada valida se encole una sola vez. Esta expectativa se documenta ahora; no se registró como prediccion previa a la ejecucion.",
+      "command": "npm test -- --ci --runInBand course-tests/integration/week-08-validation-.test.ts; npm run typecheck; npm run lint",
+      "observedResult": "En esta ejecucion, Jest aprobo 1 suite y 8 pruebas con 0 fallidas; npm run typecheck termino con codigo 0; npm run lint termino con codigo 0.",
+      "explanation": "La prueba importa queueOfflineStart y comprueba incidencia inexistente, tecnico no asignado, version base ausente y cuatro formas invalidas de version; en cada rechazo verifica que enqueue no se llame. Tambien comprueba una operacion valida. La funcion de produccion local es un auxiliar no cotejado con la implementacion acordada del equipo y no se atribuye como trabajo propio en files."
+    }
+  ]
+}
