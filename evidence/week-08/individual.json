@@ -31,8 +31,12 @@
     },
     {
       "studentId": "3523110441 - Moreno Vasquez Abraham",
-      "commitShas": ["fa48cc060e2cb02d36b6d805743bec8ddf6ea4d7"],
-      "files": ["course-tests/integration/week-08-retry-abraham.test.ts"],
+      "commitShas": [
+        "fa48cc060e2cb02d36b6d805743bec8ddf6ea4d7"
+      ],
+      "files": [
+        "course-tests/integration/week-08-retry-abraham.test.ts"
+      ],
       "tests": [
         "npm run typecheck",
         "npm run lint",
@@ -50,20 +54,25 @@
     },
     {
       "studentId": "3522110243 - Olivera Perez Josmar",
-      "commitShas": ["d4f5b1ad03b77542bc05982bef23d8651b4cd59a"],
+      "commitShas": [
+        "d4f5b1ad03b77542bc05982bef23d8651b4cd59a",
+        "baca079"
+      ],
       "files": [
-        "course-tests/integration/week-08-validation-.test.ts"
+        "course-tests/integration/week-08-validation-josmar.test.ts"
       ],
       "tests": [
-        "npm test -- --ci --runInBand course-tests/integration/week-08-validation-.test.ts",
         "npm run typecheck",
-        "npm run lint"
+        "npm run lint",
+        "npm test -- --ci --runInBand course-tests/integration/week-08-validation-josmar.test.ts course-tests/integration/week-08-retry-abraham.test.ts course-tests/integration/week-08-offline.test.ts course-tests/public/week-08.test.ts"
       ],
-      "reviews": [],
-      "prediction": "La verificacion debe confirmar que J1, J2 y J3 rechacen con su causa especifica sin invocar enqueue, y que una entrada valida se encole una sola vez. Esta expectativa se documenta ahora; no se registró como prediccion previa a la ejecucion.",
-      "command": "npm test -- --ci --runInBand course-tests/integration/week-08-validation-.test.ts; npm run typecheck; npm run lint",
-      "observedResult": "En esta ejecucion, Jest aprobo 1 suite y 8 pruebas con 0 fallidas; npm run typecheck termino con codigo 0; npm run lint termino con codigo 0.",
-      "explanation": "La prueba importa queueOfflineStart y comprueba incidencia inexistente, tecnico no asignado, version base ausente y cuatro formas invalidas de version; en cada rechazo verifica que enqueue no se llame. Tambien comprueba una operacion valida. La funcion de produccion local es un auxiliar no cotejado con la implementacion acordada del equipo y no se atribuye como trabajo propio en files."
+      "reviews": [
+        "Se revisaron las validaciones de inicio offline y se comprobaron los casos J1, J2 y J3."
+      ],
+      "prediction": "Se espera que una incidencia inexistente, un técnico no asignado o una versión inválida impidan encolar operaciones. Esta expectativa se documentó después de las pruebas.",
+      "command": "npm test -- --ci --runInBand course-tests/integration/week-08-validation-josmar.test.ts course-tests/integration/week-08-retry-abraham.test.ts course-tests/integration/week-08-offline.test.ts course-tests/public/week-08.test.ts",
+      "observedResult": "En Windows se aprobaron 4 suites y 17 pruebas, incluyendo 7 casos de Josmar. Typecheck y lint aprobaron.",
+      "explanation": "J1 rechaza incidencias inexistentes; J2 rechaza técnicos no asignados; J3 rechaza versiones inválidas. También se verifica que una operación válida se encole una sola vez. Se utilizaron dependencias simuladas."
     }
   ]
 }
