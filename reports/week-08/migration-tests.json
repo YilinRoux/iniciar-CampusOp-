@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "week": 8,
+  "commitSha": "88bce754c30ea7b67260dd96b228d9362c2647d3",
+  "generatedAt": "2026-10-25T06:16:44.939572+00:00",
+  "checks": [
+    {
+      "id": "migration-initial-v1",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "node scripts/week-08/test-migration.cjs",
+      "evidence": "PASS: estado inicial v1 conserva incidencia y operación"
+    },
+    {
+      "id": "migration-rollback",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "node scripts/week-08/test-migration.cjs",
+      "evidence": "PASS: falla inyectada revierte esquema y conserva datos"
+    },
+    {
+      "id": "migration-reopen",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "node scripts/week-08/test-migration.cjs",
+      "evidence": "PASS: datos conservados después de reabrir la base"
+    },
+    {
+      "id": "migration-recovery",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "node scripts/week-08/test-migration.cjs",
+      "evidence": "PASS: recuperación v1 → v2 conserva incidencia y operación"
+    },
+    {
+      "id": "migration-idempotent",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "node scripts/week-08/test-migration.cjs",
+      "evidence": "PASS: reapertura lógica de v2 sin migración duplicada"
+    },
+    {
+      "id": "sync-reassignment-conflict",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand course-tests/public/week-08.test.ts",
+      "evidence": "PASS: Inicio local y reasignación remota: se detecta conflicto sin mutar los registros."
+    },
+    {
+      "id": "sync-independent-changes",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --ci --runInBand course-tests/public/week-08.test.ts",
+      "evidence": "PASS: Cambios independientes se combinan y se identifican conflictos de campo."
+    },
+    {
+      "id": "sync-operation-deduplication",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --ci --runInBand course-tests/public/week-08.test.ts",
+      "evidence": "PASS: Una operación repetida conserva su identidad y se deduplica."
+    },
+    {
+      "id": "sqlite-store-restart",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --ci --runInBand course-tests/integration/week-08-sqlite.test.ts course-tests/integration/week-08-offline.test.ts course-tests/public/week-08.test.ts",
+      "evidence": "SqliteIncidentStore conserva incidencia, operación, identidad, notas y referencias fotográficas de prueba tras cerrar y reabrir la base con adaptador Node SQLite."
+    },
+    {
+      "id": "sqlite-store-migration-recovery",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand course-tests/integration/week-08-sqlite.test.ts course-tests/integration/week-08-offline.test.ts course-tests/public/week-08.test.ts",
+      "evidence": "SqliteIncidentStore revierte una migración inyectada y permite recuperación con esquema versión 2 usando adaptador Node SQLite."
+    },
+    {
+      "id": "offline-queue-serialization",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --ci --runInBand course-tests/integration/week-08-sqlite.test.ts course-tests/integration/week-08-offline.test.ts course-tests/public/week-08.test.ts",
+      "evidence": "La cola simulada conserva identidad y contenido al serializar y recuperar operaciones."
+    },
+    {
+      "id": "offline-queue-conflict",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npm test -- --ci --runInBand course-tests/integration/week-08-sqlite.test.ts course-tests/integration/week-08-offline.test.ts course-tests/public/week-08.test.ts",
+      "evidence": "Una respuesta 409 conserva la operación pendiente y registra el conflicto."
+    },
+    {
+      "id": "offline-queue-confirmation",
+      "status": "pass",
+      "scenarioType": "nominal",
+      "command": "npm test -- --ci --runInBand course-tests/integration/week-08-sqlite.test.ts course-tests/integration/week-08-offline.test.ts course-tests/public/week-08.test.ts",
+      "evidence": "Solo se elimina de la cola simulada la operación confirmada."
+    },
+    {
+      "id": "offline-queue-actor-isolation",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npm test -- --ci --runInBand course-tests/integration/week-08-sqlite.test.ts course-tests/integration/week-08-offline.test.ts course-tests/public/week-08.test.ts",
+      "evidence": "La sincronización no envía operaciones de otro actor."
+    }
+  ]
+}
