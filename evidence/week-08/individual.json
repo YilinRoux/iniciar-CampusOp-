@@ -50,14 +50,20 @@
     },
     {
       "studentId": "3522110243 - Olivera Perez Josmar",
-      "commitShas": [],
-      "files": [],
-      "tests": [],
+      "commitShas": ["d4f5b1ad03b77542bc05982bef23d8651b4cd59a"],
+      "files": [
+        "course-tests/integration/week-08-validation-.test.ts"
+      ],
+      "tests": [
+        "npm test -- --ci --runInBand course-tests/integration/week-08-validation-.test.ts",
+        "npm run typecheck",
+        "npm run lint"
+      ],
       "reviews": [],
-      "prediction": "",
-      "command": "",
-      "observedResult": "",
-      "explanation": ""
+      "prediction": "La verificacion debe confirmar que J1, J2 y J3 rechacen con su causa especifica sin invocar enqueue, y que una entrada valida se encole una sola vez. Esta expectativa se documenta ahora; no se registró como prediccion previa a la ejecucion.",
+      "command": "npm test -- --ci --runInBand course-tests/integration/week-08-validation-.test.ts; npm run typecheck; npm run lint",
+      "observedResult": "En esta ejecucion, Jest aprobo 1 suite y 8 pruebas con 0 fallidas; npm run typecheck termino con codigo 0; npm run lint termino con codigo 0.",
+      "explanation": "La prueba importa queueOfflineStart y comprueba incidencia inexistente, tecnico no asignado, version base ausente y cuatro formas invalidas de version; en cada rechazo verifica que enqueue no se llame. Tambien comprueba una operacion valida. La funcion de produccion local es un auxiliar no cotejado con la implementacion acordada del equipo y no se atribuye como trabajo propio en files."
     }
   ]
 }
