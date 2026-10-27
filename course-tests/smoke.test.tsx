@@ -2,6 +2,13 @@ import { render, waitFor } from '@testing-library/react-native';
 
 import App from '../App';
 
+jest.mock('expo-sqlite', () => ({
+  openDatabaseAsync: jest.fn().mockResolvedValue({
+    withExclusiveTransactionAsync: jest.fn().mockResolvedValue(undefined),
+    closeAsync: jest.fn().mockResolvedValue(undefined),
+  }),
+}));
+
 jest.mock('../src/api/courseBackend', () => ({
   getBackendHealth: jest.fn().mockResolvedValue({
     ok: true,
