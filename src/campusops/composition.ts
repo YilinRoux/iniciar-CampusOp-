@@ -11,6 +11,7 @@ import { HttpSessionTransport, authenticatedFetch } from './infrastructure/httpS
 import { createSessionStore } from './infrastructure/expoSecureStore';
 import { createInMemoryTelemetrySink } from './infrastructure/inMemoryTelemetrySink';
 import type { FetchLike } from './infrastructure/httpIncidentRepository';
+import { GeocodingAdapter } from './infrastructure/geocodingAdapter';
 
 // Ambos clientes usan el mismo backend. Android emulado: http://10.0.2.2:4310.
 const baseUrl = process.env.EXPO_PUBLIC_CAMPUSOPS_BACKEND_URL
@@ -27,6 +28,12 @@ export const sessionManager = new SessionManager({
 });
 
 const fetchWithSession = authenticatedFetch(sessionManager, rawFetch);
+
+export const geocodingAdapter = new GeocodingAdapter({
+  baseUrl,
+  fetch: fetchWithSession,
+  timeoutMs,
+});
 const repository = new HttpIncidentRepository({
   baseUrl, actorId: '', token: '', fetch: fetchWithSession, timeoutMs,
 });

@@ -1,4 +1,5 @@
 import type { IncidentLocation } from '../contracts';
+import type { FetchLike } from './httpIncidentRepository';
 import { planRetry, selectIncidentLocation } from '../../course-evaluation';
 
 export type GeocodingResult = Readonly<{
@@ -7,7 +8,7 @@ export type GeocodingResult = Readonly<{
   attempts: number;
 }>;
 
-type GeocodingFetch = typeof fetch;
+type GeocodingFetch = FetchLike;
 
 export class GeocodingAdapter {
   private readonly cache = new Map<string, IncidentLocation>();
@@ -54,7 +55,7 @@ export class GeocodingAdapter {
             : {},
         });
 
-        if (!response.ok) {
+        if (response.status < 200 || response.status >= 300) {
           const rawRetryAfter = response.headers.get('Retry-After');
           const seconds = rawRetryAfter === null ? NaN : Number(rawRetryAfter);
           const retryAfterMs =
@@ -77,7 +78,7 @@ export class GeocodingAdapter {
           continue;
         }
 
-        const payload: unknown = await response.json();
+        const payload: unknown = JSON.parse(await response.text());
         const location = selectIncidentLocation(payload, manualLabel);
 
         if (location.source === 'provider') {

@@ -1,4 +1,5 @@
 import { GeocodingAdapter } from '../../src/campusops/infrastructure/geocodingAdapter';
+import type { FetchLike } from '../../src/campusops/infrastructure/httpIncidentRepository';
 
 const validLocation = {
   label: 'Laboratorio ficticio A',
@@ -8,14 +9,13 @@ const validLocation = {
 
 function response(status: number, data: unknown, retryAfter?: string) {
   return {
-    ok: status >= 200 && status < 300,
     status,
     headers: {
       get: (name: string) =>
         name.toLowerCase() === 'retry-after' ? retryAfter ?? null : null,
     },
-    json: async () => data,
-  } as Response;
+    text: async () => JSON.stringify(data),
+  } as Awaited<ReturnType<FetchLike>>;
 }
 
 describe('Semana 09 - adaptador de geocodificacion', () => {
@@ -23,7 +23,7 @@ describe('Semana 09 - adaptador de geocodificacion', () => {
     const fetchMock = jest.fn(async () => response(200, validLocation));
     const adapter = new GeocodingAdapter({
       baseUrl: 'http://localhost:4310',
-      fetch: fetchMock as typeof fetch,
+      fetch: fetchMock as FetchLike,
       timeoutMs: 1000,
     });
 
@@ -44,7 +44,7 @@ describe('Semana 09 - adaptador de geocodificacion', () => {
 
     const adapter = new GeocodingAdapter({
       baseUrl: 'http://localhost:4310',
-      fetch: fetchMock as typeof fetch,
+      fetch: fetchMock as FetchLike,
       timeoutMs: 1000,
       sleep: async (ms) => { delays.push(ms); },
     });
@@ -63,7 +63,7 @@ describe('Semana 09 - adaptador de geocodificacion', () => {
 
     const adapter = new GeocodingAdapter({
       baseUrl: 'http://localhost:4310',
-      fetch: fetchMock as typeof fetch,
+      fetch: fetchMock as FetchLike,
       timeoutMs: 1000,
     });
 
@@ -80,7 +80,7 @@ describe('Semana 09 - adaptador de geocodificacion', () => {
     const fetchMock = jest.fn(async () => response(500, {}));
     const adapter = new GeocodingAdapter({
       baseUrl: 'http://localhost:4310',
-      fetch: fetchMock as typeof fetch,
+      fetch: fetchMock as FetchLike,
       timeoutMs: 1000,
       sleep: async () => {},
     });
