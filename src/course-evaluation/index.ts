@@ -174,7 +174,7 @@ export function deduplicateOperations<
   });
 }
 
-export function planRetry(_input: Readonly<{
+export function planRetry(input: Readonly<{
   method: 'GET' | 'POST';
   status: number | 'timeout';
   attempt: number;
@@ -185,7 +185,49 @@ export function planRetry(_input: Readonly<{
   delayMs: number;
   requiresStableIdempotencyKey: boolean;
 }> {
-  return pending('planRetry');
+  const hasStableKey =
+    typeof input.idempotencyKey === 'string' &&
+    input.idempotencyKey.trim().length > 0;
+
+  const requiresStableIdempotencyKey =
+    input.method === 'POST' && !hasStableKey;
+
+  const validAttempt =
+    Number.isInteger(input.attempt) &&
+    input.attempt >= 1 &&
+    input.attempt < 4;
+
+  const retryableStatus =
+    input.status === 'timeout' ||
+    input.status === 408 ||
+    input.status === 429 ||
+    (typeof input.status === 'number' &&
+      input.status >= 500 &&
+      input.status <= 599);
+
+  if (!validAttempt || !retryableStatus || requiresStableIdempotencyKey) {
+    return {
+      retry: false,
+      delayMs: 0,
+      requiresStableIdempotencyKey,
+    };
+  }
+
+  const backoffMs = Math.min(500 * 2 ** (input.attempt - 1), 8000);
+
+  const hasValidRetryAfter =
+    input.status === 429 &&
+    typeof input.retryAfterMs === 'number' &&
+    Number.isFinite(input.retryAfterMs) &&
+    input.retryAfterMs >= 0;
+
+  return {
+    retry: true,
+    delayMs: hasValidRetryAfter
+      ? Math.min(input.retryAfterMs!, 60000)
+      : backoffMs,
+    requiresStableIdempotencyKey: false,
+  };
 }
 
 export function reduceRemoteResponses(_input: Readonly<{
@@ -210,8 +252,43 @@ export function reducePermissionLifecycle(
 
 /** Week 09: see docs/CAMPUSOPS_API.md; this is not a completed solution. */
 export function selectIncidentLocation(
-  _provider: unknown,
-  _manualLabel: string,
+  provider: unknown,
+  manualLabel: string,
 ): IncidentLocation {
-  return pending('selectIncidentLocation');
+  const fallback: IncidentLocation = {
+    source: 'manual',
+    label: manualLabel,
+  };
+
+  if (
+    provider === null ||
+    typeof provider !== 'object' ||
+    Array.isArray(provider)
+  ) {
+    return fallback;
+  }
+
+  const location = provider as Record<string, unknown>;
+
+  if (
+    typeof location.label !== 'string' ||
+    location.label.trim().length === 0 ||
+    typeof location.latitude !== 'number' ||
+    typeof location.longitude !== 'number' ||
+    !Number.isFinite(location.latitude) ||
+    !Number.isFinite(location.longitude) ||
+    location.latitude < -90 ||
+    location.latitude > 90 ||
+    location.longitude < -180 ||
+    location.longitude > 180
+  ) {
+    return fallback;
+  }
+
+  return {
+    source: 'provider',
+    label: location.label,
+    latitude: location.latitude,
+    longitude: location.longitude,
+  };
 }
