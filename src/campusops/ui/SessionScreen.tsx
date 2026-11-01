@@ -5,7 +5,7 @@ import type { IncidentCreator, IncidentRepository } from '../domain/incident';
 import type { IncidentActions, SessionIncidentAction } from '../domain/incidentActions';
 import type { LogSink } from '../application/reportError';
 import { IncidentListScreen } from './IncidentListScreen';
-import type { GeocodingAdapter } from '../infrastructure/geocodingAdapter';
+import type { OpenMeteoGeocoding } from '../infrastructure/openMeteoGeocoding';
 
 const actors = [
   ['reporter-1', 'Reportante 1'], ['reporter-2', 'Reportante 2'],
@@ -15,7 +15,7 @@ const actors = [
 
 export function SessionScreen({ manager, repository, creator, actions, geocoding, onError }: {
   manager: SessionManager; repository: IncidentRepository; creator: IncidentCreator;
-  actions: IncidentActions; geocoding?: GeocodingAdapter; onError: LogSink;
+  actions: IncidentActions; geocoding?: OpenMeteoGeocoding; onError: LogSink;
 }) {
   const [session, setSession] = useState(() => manager.view());
   const [ready, setReady] = useState(false);
