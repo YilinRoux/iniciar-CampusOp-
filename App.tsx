@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
 import { getBackendHealth } from './src/api/courseBackend';
-import { incidentActions, incidentCreator, incidentRepository, sessionManager, telemetrySink } from './src/campusops/composition';
+import { incidentActions, incidentCreator, incidentRepository, sessionManager, telemetrySink, geocodingAdapter } from './src/campusops/composition';
 import { SessionScreen } from './src/campusops/ui/SessionScreen';
 
 export default function App() {
@@ -27,7 +27,7 @@ export default function App() {
         <Text testID="backend-status">Backend: {status}</Text>
       </View>
       <SessionScreen manager={sessionManager} repository={incidentRepository}
-        creator={incidentCreator} actions={incidentActions} onError={telemetrySink} />
+        creator={incidentCreator} actions={incidentActions} geocoding={geocodingAdapter} onError={telemetrySink} />
       <StatusBar style="auto" />
     </ScrollView>
   );

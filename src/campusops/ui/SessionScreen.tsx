@@ -5,6 +5,7 @@ import type { IncidentCreator, IncidentRepository } from '../domain/incident';
 import type { IncidentActions, SessionIncidentAction } from '../domain/incidentActions';
 import type { LogSink } from '../application/reportError';
 import { IncidentListScreen } from './IncidentListScreen';
+import type { GeocodingAdapter } from '../infrastructure/geocodingAdapter';
 
 const actors = [
   ['reporter-1', 'Reportante 1'], ['reporter-2', 'Reportante 2'],
@@ -12,9 +13,9 @@ const actors = [
   ['coordinator-1', 'Coordinador'],
 ] as const;
 
-export function SessionScreen({ manager, repository, creator, actions, onError }: {
+export function SessionScreen({ manager, repository, creator, actions, geocoding, onError }: {
   manager: SessionManager; repository: IncidentRepository; creator: IncidentCreator;
-  actions: IncidentActions; onError: LogSink;
+  actions: IncidentActions; geocoding?: GeocodingAdapter; onError: LogSink;
 }) {
   const [session, setSession] = useState(() => manager.view());
   const [ready, setReady] = useState(false);
@@ -25,6 +26,9 @@ export function SessionScreen({ manager, repository, creator, actions, onError }
   const [diagnosis, setDiagnosis] = useState('');
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState('');
+  const [locationQuery, setLocationQuery] = useState('');
+  const [locationMessage, setLocationMessage] = useState('');
+  const [searchingLocation, setSearchingLocation] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -34,6 +38,7 @@ export function SessionScreen({ manager, repository, creator, actions, onError }
       const next = manager.view();
       if (next.actorId !== previousActor) {
         setDescription(''); setLocation(''); setDiagnosis(''); setMessage('');
+        setLocationQuery(''); setLocationMessage('');
         setIncidentId('campus-inc-001');
         previousActor = next.actorId;
       }
@@ -49,6 +54,39 @@ export function SessionScreen({ manager, repository, creator, actions, onError }
     setMessage('');
     try { await operation(); } catch { setMessage('No se pudo completar. Revisa sesion, permisos y conexion.'); }
     finally { setBusy(false); }
+  }
+
+  async function searchLocation() {
+    if (!geocoding || !locationQuery.trim() || searchingLocation || busy) return;
+
+    setSearchingLocation(true);
+    setLocationMessage('Buscando ubicacion...');
+
+    try {
+      const result = await geocoding.resolve(
+        locationQuery,
+        location.trim() || locationQuery.trim(),
+      );
+
+      if (result.location.source === 'provider') {
+        setLocation(result.location.label);
+        setLocationMessage(
+          result.fromCache
+            ? 'Ubicacion recuperada de la cache. Puedes editarla.'
+            : 'Ubicacion encontrada. Puedes editarla antes de guardar.',
+        );
+      } else {
+        setLocationMessage(
+          'No se obtuvo una ubicacion valida. Conserva o escribe la ubicacion manualmente.',
+        );
+      }
+    } catch {
+      setLocationMessage(
+        'No se pudo consultar el proveedor. Puedes escribir la ubicacion manualmente.',
+      );
+    } finally {
+      setSearchingLocation(false);
+    }
   }
 
   async function perform(action: SessionIncidentAction) {
@@ -73,11 +111,31 @@ export function SessionScreen({ manager, repository, creator, actions, onError }
       {session.role === 'reporter' && <>
         <Text>Reportar incidencia de conectividad</Text>
         <TextInput accessibilityLabel="Descripcion" placeholder="Descripcion" value={description} onChangeText={setDescription} />
-        <TextInput accessibilityLabel="Ubicacion ficticia" placeholder="Ubicacion ficticia" value={location} onChangeText={setLocation} />
-        <Button title="Crear incidencia" disabled={busy || !description.trim() || !location.trim()} onPress={() => {
+        <TextInput
+          accessibilityLabel="Buscar ubicacion ficticia"
+          placeholder="Ejemplo: Laboratorio ficticio"
+          value={locationQuery}
+          onChangeText={setLocationQuery}
+        />
+        <Button
+          title={searchingLocation ? 'Buscando ubicacion...' : 'Buscar ubicacion'}
+          disabled={busy || searchingLocation || !geocoding || !locationQuery.trim()}
+          onPress={() => { void searchLocation(); }}
+        />
+        {locationMessage !== '' && (
+          <Text accessibilityRole="alert">{locationMessage}</Text>
+        )}
+        <TextInput
+          accessibilityLabel="Ubicacion ficticia"
+          placeholder="Ubicacion manual o resultado del proveedor"
+          value={location}
+          onChangeText={setLocation}
+        />
+        <Button title="Crear incidencia" disabled={busy || searchingLocation || !description.trim() || !location.trim()} onPress={() => {
           void run(async () => {
             await creator.createIncident({ category: 'connectivity', description, location }, `session-create-${Date.now()}`);
-            setDescription(''); setLocation(''); setRevision((value) => value + 1);
+            setDescription(''); setLocation(''); setLocationQuery('');
+            setLocationMessage(''); setRevision((value) => value + 1);
           });
         }} />
       </>}
