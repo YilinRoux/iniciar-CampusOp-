@@ -118,4 +118,46 @@ describe('Semana 09 - proveedor externo Open-Meteo', () => {
     expect(result.attempts).toBe(1);
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
+
+  test('cancela solicitudes lentas y conserva ubicacion manual', async () => {
+    let requests = 0;
+    const delays: number[] = [];
+
+    const fetchMock: FetchLike = async (_url, init) => {
+      requests++;
+
+      return new Promise<Awaited<ReturnType<FetchLike>>>(
+        (_resolve, reject) => {
+          if (init.signal?.aborted) {
+            reject(new Error('AbortError'));
+            return;
+          }
+
+          init.signal?.addEventListener('abort', () => {
+            reject(new Error('AbortError'));
+          }, { once: true });
+        },
+      );
+    };
+
+    const adapter = new OpenMeteoGeocoding({
+      fetch: fetchMock,
+      timeoutMs: 10,
+      sleep: async (ms) => { delays.push(ms); },
+    });
+
+    const result = await adapter.resolve(
+      'Lugar ficticio',
+      'Laboratorio A, ubicacion manual',
+    );
+
+    expect(result.location).toEqual({
+      source: 'manual',
+      label: 'Laboratorio A, ubicacion manual',
+    });
+    expect(result.attempts).toBe(4);
+    expect(requests).toBe(4);
+    expect(delays).toEqual([500, 1000, 2000]);
+  });
+
 });

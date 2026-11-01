@@ -50,8 +50,6 @@ export class OpenMeteoGeocoding {
           signal: controller.signal,
         });
 
-        clearTimeout(timer);
-
         if (response.status < 200 || response.status >= 300) {
           const raw = response.headers.get('Retry-After');
           const seconds = raw === null ? NaN : Number(raw);
