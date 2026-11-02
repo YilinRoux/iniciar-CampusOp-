@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "week": 9,
+  "commitSha": "cbd1e96ba282b908f79dd7c6bee37167a1117174",
+  "decision": "Usar geocodificacion externa mediante adaptador y cache, con validacion de coordenadas y alternativa manual. Reintentar solo errores transitorios hasta cuatro intentos, respetar Retry-After y repetir escrituras unicamente con una identidad de operacion estable.",
+  "alternatives": [
+    "Depender exclusivamente del proveedor externo y bloquear el registro si falla.",
+    "Reintentar solicitudes indefinidamente hasta obtener respuesta.",
+    "Utilizar solo ubicaciones manuales sin consultar un proveedor."
+  ],
+  "tradeoff": "La solucion mantiene util CampusOps ante fallos y reduce solicitudes duplicadas, pero agrega complejidad y una cache solo en memoria. La alternativa manual no ofrece coordenadas cuando el proveedor falla.",
+  "requirementIds": [
+    "AC-01",
+    "AC-02",
+    "AC-03",
+    "AC-04"
+  ],
+  "verification": [
+    {
+      "command": "npx jest course-tests/public/week-09.test.ts course-tests/integration/week-09-geocoding.test.ts course-tests/integration/week-09-open-meteo.test.ts course-tests/integration/week-09-action-retry.test.ts --runInBand --verbose",
+      "result": "pass",
+      "evidence": "Cuatro suites aprobadas, 18 pruebas en total; cache, ubicacion manual, timeout, 429, Retry-After e idempotencia."
+    },
+    {
+      "command": "CAMPUSOPS_LIVE_BACKEND=http://127.0.0.1:4310 npx jest course-tests/integration/week-09-backend-lost-response.test.ts --runInBand --verbose",
+      "result": "pass",
+      "evidence": "Una prueba contra backend local: respuesta perdida y reintento sin duplicar la transicion."
+    },
+    {
+      "command": "make verify-week-09",
+      "result": "pass",
+      "evidence": "Evaluador oficial: status pass para SHA 44839d83aba289a92a87a99cdb2aae4f38e3a878."
+    }
+  ]
+}
