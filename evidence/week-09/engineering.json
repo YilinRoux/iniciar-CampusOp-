@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "week": 9,
-  "commitSha": "cbd1e96ba282b908f79dd7c6bee37167a1117174",
+  "commitSha": "c369ca1584b8255089509e0907ae3a18f8172002",
   "decision": "Usar geocodificacion externa mediante adaptador y cache, con validacion de coordenadas y alternativa manual. Reintentar solo errores transitorios hasta cuatro intentos, respetar Retry-After y repetir escrituras unicamente con una identidad de operacion estable.",
   "alternatives": [
     "Depender exclusivamente del proveedor externo y bloquear el registro si falla.",
