@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "week": 9,
+  "commitSha": "cbd1e96ba282b908f79dd7c6bee37167a1117174",
+  "generatedAt": "2026-11-01T05:27:23.704042+00:00",
+  "checks": [
+    {
+      "id": "geocoding-rate-limited",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest course-tests/public/week-09.test.ts course-tests/integration/week-09-geocoding.test.ts course-tests/integration/week-09-open-meteo.test.ts course-tests/integration/week-09-action-retry.test.ts --runInBand --verbose",
+      "evidence": "Open-Meteo: HTTP 429 con Retry-After; prueba aprobada."
+    },
+    {
+      "id": "geocoding-timeout",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest course-tests/public/week-09.test.ts course-tests/integration/week-09-geocoding.test.ts course-tests/integration/week-09-open-meteo.test.ts course-tests/integration/week-09-action-retry.test.ts --runInBand --verbose",
+      "evidence": "Solicitud lenta cancelada; tras cuatro intentos se conserva ubicacion manual."
+    },
+    {
+      "id": "geocoding-invalid-coordinates",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npx jest course-tests/public/week-09.test.ts course-tests/integration/week-09-geocoding.test.ts course-tests/integration/week-09-open-meteo.test.ts course-tests/integration/week-09-action-retry.test.ts --runInBand --verbose",
+      "evidence": "Coordenadas invalidas rechazadas; se utiliza ubicacion manual."
+    },
+    {
+      "id": "geocoding-malformed-json",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "npx jest course-tests/public/week-09.test.ts course-tests/integration/week-09-geocoding.test.ts course-tests/integration/week-09-open-meteo.test.ts course-tests/integration/week-09-action-retry.test.ts --runInBand --verbose",
+      "evidence": "JSON malformado sin reintentos innecesarios."
+    },
+    {
+      "id": "action-http-400",
+      "status": "pass",
+      "scenarioType": "boundary",
+      "command": "npx jest course-tests/public/week-09.test.ts course-tests/integration/week-09-geocoding.test.ts course-tests/integration/week-09-open-meteo.test.ts course-tests/integration/week-09-action-retry.test.ts --runInBand --verbose",
+      "evidence": "POST rechazado con HTTP 400 no se reintenta."
+    },
+    {
+      "id": "backend-timeout-after-commit",
+      "status": "pass",
+      "scenarioType": "failure",
+      "command": "CAMPUSOPS_LIVE_BACKEND=http://127.0.0.1:4310 npx jest course-tests/integration/week-09-backend-lost-response.test.ts --runInBand --verbose",
+      "evidence": "Backend local: respuesta perdida tras guardar accion start; reintento con misma clave y cuerpo; version aumenta una vez; estado final in_progress."
+    }
+  ]
+}

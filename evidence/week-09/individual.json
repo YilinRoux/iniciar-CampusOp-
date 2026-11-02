@@ -27,25 +27,36 @@
     },
     {
       "studentId": "3523110441 - Moreno Vasquez Abraham",
-      "commitShas": [],
-      "files": [],
-      "tests": [],
+      "commitShas": ["592d5a870f8a529f7c77c84eecf6739f830f5ca6"],
+      "files": [
+        "course-tests/integration/week-09-abraham-retry-policy.test.ts"
+      ],
+      "tests": [
+        "npx jest course-tests/integration/week-09-abraham-retry-policy.test.ts --runInBand: 1 suite y 6 pruebas aprobadas, 0 fallos (limite de intentos, POST sin clave, POST con clave estable, 429 con Retry-After, backoff 500/1000/2000 ms y HTTP 400 sin reintento)",
+        "npm run typecheck: sin errores",
+        "npm run lint: sin errores"
+      ],
       "reviews": [],
-      "prediction": "PENDIENTE: registrar la prediccion del integrante.",
-      "command": "PENDIENTE: registrar el comando ejecutado.",
-      "observedResult": "PENDIENTE: registrar el resultado real.",
-      "explanation": "PENDIENTE: explicar la contribucion y declarar asistencia de IA si corresponde."
+      "prediction": "Antes de ejecutar, lei planRetry en src/course-evaluation/index.ts y esperaba que el reintento se detuviera desde el intento 4 (retry false y delayMs 0), que un POST sin clave estable no se repitiera y pidiera una (requiresStableIdempotencyKey true), que con clave estable si se pudiera reintentar, que en un 429 el delayMs fuera el Retry-After recibido (2000), que el backoff de un GET con 500 fuera 500, 1000 y 2000 ms en los intentos 1, 2 y 3, y que un HTTP 400 no se reintentara porque no es un estado reintentable (solo timeout, 408, 429 y 5xx).",
+      "command": "npx jest course-tests/integration/week-09-abraham-retry-policy.test.ts --runInBand",
+      "observedResult": "Con Node 22.22.0, npm run typecheck y npm run lint terminaron sin errores. La suite course-tests/integration/week-09-abraham-retry-policy.test.ts paso completa: Test Suites 1 passed, 1 total; Tests 6 passed, 6 total, sin fallos ni pruebas omitidas. Los seis resultados coincidieron con mi prediccion y no fue necesario modificar codigo ni pruebas publicas.",
+      "explanation": "Cree pruebas nuevas que ejercitan la funcion real planRetry con los casos limite de la politica de reintentos: el tope de intentos (attempt menor a 4), la proteccion de idempotencia (un POST solo se reintenta con clave estable no vacia), el uso de Retry-After en un 429, el backoff progresivo 500, 1000 y 2000 ms, y que un HTTP 400 no se reintenta. No usan temporizadores reales porque planRetry solo devuelve la planificacion, y no repiten los casos de la prueba publica week-09.test.ts (uso otros valores, como clave operacion-ficticia-001, Retry-After de 2000 ms y un GET con 500 en el intento 4). Utilice asistencia de IA (Claude) para redactar el archivo de pruebas; yo revise la funcion planRetry, ejecute typecheck, lint y jest en mi equipo y los resultados registrados son los que obtuve."
     },
     {
       "studentId": "3522110243 - Olivera Perez Josmar",
-      "commitShas": [],
-      "files": [],
-      "tests": [],
+      "commitShas": ["5de0933e685c5f0da1ee88a301f097f014f8c2ba"],
+      "files": ["course-tests/integration/week-09-josmar-fallback.test.ts"],
+      "tests": [
+        "J1: proveedor sin respuesta - PASS",
+        "J2: coordenadas invalidas - PASS",
+        "J3: coordenadas validas - PASS",
+        "J4: etiqueta vacia - PASS"
+      ],
       "reviews": [],
-      "prediction": "PENDIENTE: registrar la prediccion del integrante.",
-      "command": "PENDIENTE: registrar el comando ejecutado.",
-      "observedResult": "PENDIENTE: registrar el resultado real.",
-      "explanation": "PENDIENTE: explicar la contribucion y declarar asistencia de IA si corresponde."
+      "prediction": "Se esperaba que selectIncidentLocation utilizara la ubicacion manual cuando el proveedor no respondiera, devolviera coordenadas invalidas o una etiqueta vacia. Cuando las coordenadas fueran validas, se esperaba conservar la ubicacion del proveedor. Los resultados de fallback no debian incluir coordenadas.",
+      "command": "npx jest course-tests/integration/week-09-josmar-fallback.test.ts --runInBand; npm run typecheck; npm run lint",
+      "observedResult": "Las cuatro pruebas automatizadas aprobaron: 1 suite passed, 4 tests passed. npm run typecheck termino sin errores y npm run lint termino sin reportar errores.",
+      "explanation": "Agregue cuatro pruebas automatizadas para verificar la seleccion de ubicacion de incidencias ante respuestas ausentes, coordenadas invalidas, coordenadas validas y etiquetas vacias. Verifique los resultados con Jest, TypeScript y ESLint. Utilice asistencia de ChatGPT para revisar las instrucciones, preparar las pruebas y documentar la evidencia."
     }
   ]
 }
